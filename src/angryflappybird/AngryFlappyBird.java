@@ -33,8 +33,9 @@ public class AngryFlappyBird extends Application {
     private AnimationTimer timer;
     
     // game components
-    private Sprite blob;
-    private ArrayList<Sprite> floors;
+    private Bird blob;
+    private ArrayList<Bird> floors;
+    private ArrayList<Pipe> pipes;
     
     // game flags
     private boolean CLICKED, GAME_START, GAME_OVER;
@@ -99,6 +100,7 @@ public class AngryFlappyBird extends Application {
         GAME_OVER = false;
         GAME_START = false;
         floors = new ArrayList<>();
+        pipes = new ArrayList<>();
         
     	if(firstEntry) {
     		// create two canvases
@@ -119,15 +121,30 @@ public class AngryFlappyBird extends Application {
     		int posX = i * DEF.FLOOR_WIDTH;
     		int posY = DEF.SCENE_HEIGHT - DEF.FLOOR_HEIGHT;
     		
-    		Sprite floor = new Sprite(posX, posY, DEF.IMAGE.get("floor"));
+    		Bird floor = new Bird(posX, posY, DEF.IMAGE.get("floor"));
     		floor.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
     		floor.render(gc);
     		
     		floors.add(floor);
     	}
+    	//initialize pipe 
+	for(int i=0; i<DEF.pipe_COUNT; i++) {
+    		
+    		int posX = i * DEF.pipe_WIDTH;
+    		int posY = DEF.SCENE_HEIGHT - DEF.pipe_HEIGHT;
+    		
+    		Pipe pipe = new Pipe(posX, posY, DEF.IMAGE.get("unitytut-pipe"));
+    		pipe.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
+    		pipe.render(gc);
+    		
+    		pipes.add(pipe);
+    	}
+    	
+//    	 pipe = new Bird(DEF.pipe_POS_X, DEF.pipe_POS_Y,DEF.IMAGE.get("unitytut-pipe"));
+//         pipe.render(gc);
         
         // initialize blob
-        blob = new Sprite(DEF.BLOB_POS_X, DEF.BLOB_POS_Y,DEF.IMAGE.get("blob0"));
+        blob = new Bird(DEF.BLOB_POS_X, DEF.BLOB_POS_Y,DEF.IMAGE.get("blob0"));
         blob.render(gc);
         
         // initialize timer
@@ -153,6 +170,7 @@ public class AngryFlappyBird extends Application {
     	     if (GAME_START) {
     	    	 // step1: update floor
     	    	 moveFloor();
+    	    	 movePipes();
     	    	 
     	    	 // step2: update blob
     	    	 moveBlob();
@@ -174,6 +192,21 @@ public class AngryFlappyBird extends Application {
     		}
     	 }
     	 
+    	 
+    	 
+    	 private void movePipes() {
+     		
+     		for(int i=0; i<DEF.pipe_COUNT; i++) {
+     			if (pipes.get(i).getPositionX() <= -DEF.pipe_WIDTH) {
+     				double nextX = pipes.get((i+1)%DEF.pipe_COUNT).getPositionX() + DEF.pipe_WIDTH;
+     	        	double nextY = DEF.SCENE_HEIGHT - DEF.pipe_HEIGHT;
+     	        	pipes.get(i).setPositionXY(nextX, nextY);
+     			}
+     			pipes.get(i).render(gc);
+     			pipes.get(i).update(DEF.SCENE_SHIFT_TIME);
+     		}
+     	 }
+     	 
     	 // step2: update blob
     	 private void moveBlob() {
     		 
@@ -201,18 +234,21 @@ public class AngryFlappyBird extends Application {
     	 public void checkCollision() {
     		 
     		// check collision  
-			for (Sprite floor: floors) {
+			for (Bird floor: floors) {
 				GAME_OVER = GAME_OVER || blob.intersectsSprite(floor);
 			}
 			
 			// end the game when blob hit stuff
 			if (GAME_OVER) {
 				showHitEffect(); 
-				for (Sprite floor: floors) {
+				for (Bird floor: floors) {
 					floor.setVelocity(0, 0);
 				}
 				timer.stop();
 			}
+			
+			
+			
 			
     	 }
     	 

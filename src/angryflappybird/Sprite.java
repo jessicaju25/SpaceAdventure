@@ -4,86 +4,86 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
-public class Sprite {  
+public interface Sprite {  
 	
-    private Image image;
-    private double positionX;
-    private double positionY;
-    private double velocityX;
-    private double velocityY;
-    private double width;
-    private double height;
-    private String IMAGE_DIR = "../resources/images/";
+//    private Image image;
+//    private double positionX;
+//    private double positionY;
+//    private double velocityX;
+//    private double velocityY;
+//    private double width;
+//    private double height;
+//    //private String IMAGE_DIR = "../resources/images/"; Delete already defined in the defines class 
+//
+//    public Sprite(Image image ,double positionX, double positionY, double velocityX, double velocityY, double width, double height) {
+//        this.positionX = 0;
+//        this.positionY = 0;
+//        this.velocityX = 0;
+//        this.velocityY = 0;
+//    }
+//    
+//    public Sprite(double pX, double pY, Image image) {
+////    	setPositionXY(pX, pY);
+////        setImage(image);
+////        this.velocityX = 0;
+////        this.velocityY = 0;
+//    }
 
-    public Sprite() {
-        this.positionX = 0;
-        this.positionY = 0;
-        this.velocityX = 0;
-        this.velocityY = 0;
-    }
+    void setImage(Image image);
+//        this.image = image;
+//        this.width = image.getWidth();
+//        this.height = image.getHeight();
     
-    public Sprite(double pX, double pY, Image image) {
-    	setPositionXY(pX, pY);
-        setImage(image);
-        this.velocityX = 0;
-        this.velocityY = 0;
-    }
 
-    public void setImage(Image image) {
-        this.image = image;
-        this.width = image.getWidth();
-        this.height = image.getHeight();
-    }
+     void setPositionXY(double positionX, double positionY) ;
+//        this.positionX = positionX;
+//        this.positionY = positionY;
+    
 
-    public void setPositionXY(double positionX, double positionY) {
-        this.positionX = positionX;
-        this.positionY = positionY;
-    }
+    double getPositionX() ;
+//        return positionX;
+    
 
-    public double getPositionX() {
-        return positionX;
-    }
+    double getPositionY();
+//        return positionY;
+//    }
 
-    public double getPositionY() {
-        return positionY;
-    }
+    void setVelocity(double velocityX, double velocityY);
+//        this.velocityX = velocityX;
+//        this.velocityY = velocityY;
+  
 
-    public void setVelocity(double velocityX, double velocityY) {
-        this.velocityX = velocityX;
-        this.velocityY = velocityY;
-    }
+    void addVelocity(double x, double y);
+//        this.velocityX += x;
+//        this.velocityY += y;
 
-    public void addVelocity(double x, double y) {
-        this.velocityX += x;
-        this.velocityY += y;
-    }
 
-    public double getVelocityX() {
-        return velocityX;
-    }
+    double getVelocityX();
+//        return velocityX;
+    
 
-    public double getVelocityY() {
-        return velocityY;
-    }
+    double getVelocityY();
+//        return velocityY;
+    
 
-    public double getWidth() {
-        return width;
-    }
+    double getWidth();
+//        return width;
+    
 
-    public void render(GraphicsContext gc) {
-        gc.drawImage(image, positionX, positionY);
-    }
+    void render(GraphicsContext gc);
+//        gc.drawImage(image, positionX, positionY);
+    
 
-    public Rectangle2D getBoundary() {
-        return new Rectangle2D(positionX, positionY, width, height);
-    }
+    Rectangle2D getBoundary();
+//        return new Rectangle2D(positionX, positionY, width, height);
+    
 
-    public boolean intersectsSprite(Sprite s) {
-        return s.getBoundary().intersects(this.getBoundary());
-    }
+    boolean intersectsSprite(Sprite s);
+//        return s.getBoundary().intersects(this.getBoundary());
+    
 
-    public void update(double time) {
-        positionX += velocityX * time;
-        positionY += velocityY * time;
-    }
+    void update(double time);
+//        positionX += velocityX * time;
+//        positionY += velocityY * time;
+   
 }
