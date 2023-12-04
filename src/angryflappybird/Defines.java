@@ -36,7 +36,7 @@ public class Defines {
     
  
     final int pipe_WIDTH = 400;
-    final int pipe_HEIGHT = 200;
+     int pipe_HEIGHT = 100;
     final int pipe_COUNT = 2;
     
     
@@ -59,7 +59,7 @@ public class Defines {
     // coefficients related to media display
     final String STAGE_TITLE = "Angry Flappy Bird";
 	private final String IMAGE_DIR = "../resources/images/";
-    final String[] IMAGE_FILES = {"background","blob0", "blob1", "blob2", "blob3", "floor","unitytut-pipe"};
+    final String[] IMAGE_FILES = {"background","blob0", "blob1", "blob2", "blob3", "floor","unitytut-pipe","unitytut-pipe2"};
 
     final HashMap<String, ImageView> IMVIEW = new HashMap<String, ImageView>();
     final HashMap<String, Image> IMAGE = new HashMap<String, Image>();
@@ -85,7 +85,7 @@ public class Defines {
 				img = new Image(pathImage(IMAGE_FILES[i]), BLOB_WIDTH, BLOB_HEIGHT, false, false);
 			}
 			
-			else if (i ==6) {
+			else if (i ==6 || i ==7) {
 				img = new Image(pathImage(IMAGE_FILES[i]), pipe_WIDTH, pipe_HEIGHT, false, false);
 			}
 
