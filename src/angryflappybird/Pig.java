@@ -6,82 +6,84 @@ import javafx.scene.image.Image;
 
 public class Pig implements Sprite{
 
-	@Override
-	public void setImage(Image image) {
-		// TODO Auto-generated method stub
-		
-	}
+	  private Image image;
+	    private double positionX;
+	    private double positionY;
+	    private double velocityX;
+	    private double velocityY;
+	    private double width;
+	    private double height;
+	    //private String IMAGE_DIR = "../resources/images/";
 
-	@Override
-	public void setPositionXY(double positionX, double positionY) {
-		// TODO Auto-generated method stub
-		
-	}
+	    public Pig() {
+	        this.positionX = 0;
+	        this.positionY = 0;
+	        this.velocityX = 0;
+	        this.velocityY = 0;
+	    }
+	   
+	    public Pig(double pX, double pY, Image image) {
+	    setPositionXY(pX, pY);
+	        setImage(image);
+	        this.velocityX = 0;
+	        this.velocityY = 0;
+	    }
 
-	@Override
-	public double getPositionX() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+	    public void setImage(Image image) {
+	        this.image = image;
+	        this.width = image.getWidth();
+	        this.height = image.getHeight();
+	    }
 
-	@Override
-	public double getPositionY() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+	    public void setPositionXY(double positionX, double positionY) {
+	        this.positionX = positionX;
+	        this.positionY = positionY;
+	    }
 
-	@Override
-	public void setVelocity(double velocityX, double velocityY) {
-		// TODO Auto-generated method stub
-		
-	}
+	    public double getPositionX() {
+	        return positionX;
+	    }
 
-	@Override
-	public void addVelocity(double x, double y) {
-		// TODO Auto-generated method stub
-		
-	}
+	    public double getPositionY() {
+	        return positionY;
+	    }
 
-	@Override
-	public double getVelocityX() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+	    public void setVelocity(double velocityX, double velocityY) {
+	        this.velocityX = velocityX;
+	        this.velocityY = velocityY;
+	    }
 
-	@Override
-	public double getVelocityY() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+	    public void addVelocity(double x, double y) {
+	        this.velocityX += x;
+	        this.velocityY += y;
+	    }
 
-	@Override
-	public double getWidth() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+	    public double getVelocityX() {
+	        return velocityX;
+	    }
 
-	@Override
-	public void render(GraphicsContext gc) {
-		// TODO Auto-generated method stub
-		
-	}
+	    public double getVelocityY() {
+	        return velocityY;
+	    }
 
-	@Override
-	public Rectangle2D getBoundary() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	    public double getWidth() {
+	        return width;
+	    }
 
-	@Override
-	public boolean intersectsSprite(Sprite s) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+	    public void render(GraphicsContext gc) {
+	        gc.drawImage(image, positionX, positionY);
+	    }
 
-	@Override
-	public void update(double time) {
-		// TODO Auto-generated method stub
-		
-	}
+	    public Rectangle2D getBoundary() {
+	        return new Rectangle2D(positionX, positionY, width, height);
+	    }
 
+	    public boolean intersectsSprite(Sprite s) {
+	        return s.getBoundary().intersects(this.getBoundary());
+	    }
+
+	    public void update(double time) {
+	        positionX += velocityX * time;
+	        positionY += velocityY * time;
+	    }
 }

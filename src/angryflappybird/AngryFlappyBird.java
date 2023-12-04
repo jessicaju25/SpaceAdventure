@@ -141,7 +141,7 @@ public class AngryFlappyBird extends Application {
 	for(int i=0; i<DEF.pipe_COUNT; i++) {
     		
     		int posX = i * DEF.pipe_WIDTH;
-    		int posY = DEF.SCENE_HEIGHT - DEF.pipe_HEIGHT;
+    		int posY = DEF.SCENE_HEIGHT- DEF.FLOOR_HEIGHT - DEF.pipe_HEIGHT;
     		
     		Pipe pipe = new Pipe(posX, posY, DEF.IMAGE.get("unitytut-pipe"));
     		pipe.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
@@ -209,7 +209,7 @@ public class AngryFlappyBird extends Application {
      		for(int i=0; i<DEF.pipe_COUNT; i++) {
      			if (pipes.get(i).getPositionX() <= -DEF.pipe_WIDTH) {
      				double nextX = pipes.get((i+1)%DEF.pipe_COUNT).getPositionX() + DEF.pipe_WIDTH;
-     	        	double nextY = DEF.SCENE_HEIGHT - DEF.pipe_HEIGHT;
+     	        	double nextY = DEF.SCENE_HEIGHT -DEF.FLOOR_HEIGHT- DEF.pipe_HEIGHT;
      	        	pipes.get(i).setPositionXY(nextX, nextY);
      			}
      			pipes.get(i).render(gc);

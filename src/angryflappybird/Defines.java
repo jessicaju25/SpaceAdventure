@@ -36,7 +36,7 @@ public class Defines {
     
  
     final int pipe_WIDTH = 400;
-    final int pipe_HEIGHT = 100;
+    final int pipe_HEIGHT = 200;
     final int pipe_COUNT = 2;
     
     
