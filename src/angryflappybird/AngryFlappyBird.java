@@ -78,8 +78,18 @@ public class AngryFlappyBird extends Application {
         
         DEF.startButton.setOnMouseClicked(this::mouseClickHandler);
         
+        DEF.easyButton.setOnMouseClicked(e -> handleDifficultyButton("Easy"));
+        DEF.mediumButton.setOnMouseClicked(e -> handleDifficultyButton("Medium"));
+        DEF.hardButton.setOnMouseClicked(e -> handleDifficultyButton("Hard"));
+        
         gameControl = new VBox();
-        gameControl.getChildren().addAll(DEF.startButton);
+        gameControl.getChildren().addAll(DEF.startButton,DEF.easyButton,DEF.mediumButton,DEF.hardButton);
+    }
+    
+    
+    private void handleDifficultyButton(String difficulty ) {
+    
+    	
     }
     
     private void mouseClickHandler(MouseEvent e) {

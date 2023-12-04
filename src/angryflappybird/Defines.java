@@ -67,6 +67,11 @@ public class Defines {
     //nodes on the scene graph
     Button startButton;
     
+    //nodes for level of difficulty 
+    Button easyButton;
+    Button mediumButton;
+    Button hardButton;
+    
     // constructor
 	Defines() {
 		
@@ -98,6 +103,11 @@ public class Defines {
 		
 		// initialize scene nodes
 		startButton = new Button("Go!");
+		//initialize difficulty nodes
+		
+		easyButton = new Button("Easy");
+		mediumButton = new Button("Medium");
+		hardButton = new Button("Hard");
 	}
 	
 	public String pathImage(String filepath) {
