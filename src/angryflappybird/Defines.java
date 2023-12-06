@@ -38,18 +38,15 @@ public class Defines {
     final int pipe_WIDTH = 100;
      int pipe_HEIGHT = 100;
     final int pipe_COUNT = 2;
-    
-<<<<<<< HEAD
+
     //coefficients related to white egg
     final int wegg_WIDTH = 100;
     int wegg_HEIGHT = 100;
     final int wegg_COUNT = 1;
-=======
+
     final int egg_WIDTH = 70;
     final int egg_HEIGHT = 70;
-    
 
->>>>>>> origin/main
   
    //coefficients related to yellow egg
    final int gegg_WIDTH = 100;
@@ -76,13 +73,11 @@ public class Defines {
     // coefficients related to media display
     final String STAGE_TITLE = "Angry Flappy Bird";
 	private final String IMAGE_DIR = "../resources/images/";
-<<<<<<< HEAD
-    final String[] IMAGE_FILES = {"background","blob0", "blob1", "blob2", "blob3", "floor", "pipe", "pipe2", "whiteegg", "goldegg", "pig"};
-=======
 
-    final String[] IMAGE_FILES = {"background","background0" , "blob0", "blob1", "blob2", "blob3", "floor","unitytut-pipe","unitytut-pipe2", "whiteegg"};
 
->>>>>>> origin/main
+    final String[] IMAGE_FILES = {"background","background0" , "blob0", "blob1", "blob2", "blob3", "floor","pipe","pipe2", "whiteegg","whiteegg","goldegg", "pig"};
+
+
 
     final HashMap<String, ImageView> IMVIEW = new HashMap<String, ImageView>();
     final HashMap<String, Image> IMAGE = new HashMap<String, Image>();
@@ -123,23 +118,23 @@ public class Defines {
 			else if (i == 7  || i == 8 ) {
 				img = new Image(pathImage(IMAGE_FILES[i]), pipe_WIDTH, pipe_HEIGHT, false, false);
 			}
-<<<<<<< HEAD
+
 			
-			else if(i==8) {
+			else if(i==10) {
 				
 				img = new Image(pathImage(IMAGE_FILES[i]), wegg_WIDTH, wegg_HEIGHT, false, false);
 			}
 			
-			else if(i==9) {
+			else if(i==11) {
 				img = new Image(pathImage(IMAGE_FILES[i]), gegg_WIDTH, gegg_HEIGHT, false, false);
 			}
 			
-			else if(i==10) {
+			else if(i==12) {
 				img = new Image(pathImage(IMAGE_FILES[i]), pig_WIDTH, pig_HEIGHT, false, false);
-=======
+			}
 			else if (i == 9) {
 				img = new Image(pathImage(IMAGE_FILES[i]), egg_WIDTH, egg_HEIGHT, false, false);
->>>>>>> origin/main
+
 			}
 
 			else {
