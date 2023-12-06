@@ -147,10 +147,7 @@ public class AngryFlappyBird extends Application {
     		Pipe pipe = new Pipe(posX, posY, DEF.IMAGE.get("unitytut-pipe"));
     		pipe.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
     		
-//    		if(i==1) {
-//    			DEF.pipe_HEIGHT = DEF.pipe_HEIGHT*2;
-//    			System.out.println("hey");
-//    		}
+
     		pipe.render(gc);
     		
     		pipes.add(pipe);
