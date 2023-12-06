@@ -39,14 +39,10 @@ public class Defines {
      int pipe_HEIGHT = 100;
     final int pipe_COUNT = 2;
     
+    final int egg_WIDTH = 70;
+    final int egg_HEIGHT = 70;
     
-    
-//    final int pipe_HEIGHT = 400;
-//    final int pipe_POS_X = 300;  // Updated position to appear on the right side of the screen
-//    final int pipe_POS_Y = SCENE_HEIGHT - FLOOR_HEIGHT - pipe_HEIGHT; // Adjusted to fit above the floor
-//    final int pipe_WIDTH = 70;  // Reduced width for the pipe
-//     // Increased height for the pipe
-//    final int pipe_COUNT = 1;   // Number of pipes
+
   
     // coefficients related to time
     final int SCENE_SHIFT_TIME = 5;
@@ -59,7 +55,7 @@ public class Defines {
     // coefficients related to media display
     final String STAGE_TITLE = "Angry Flappy Bird";
 	private final String IMAGE_DIR = "../resources/images/";
-    final String[] IMAGE_FILES = {"background","blob0", "blob1", "blob2", "blob3", "floor","unitytut-pipe","unitytut-pipe2"};
+    final String[] IMAGE_FILES = {"background","blob0", "blob1", "blob2", "blob3", "floor","unitytut-pipe","unitytut-pipe2", "whiteegg"};
 
     final HashMap<String, ImageView> IMVIEW = new HashMap<String, ImageView>();
     final HashMap<String, Image> IMAGE = new HashMap<String, Image>();
@@ -87,6 +83,9 @@ public class Defines {
 			
 			else if (i ==6 || i ==7) {
 				img = new Image(pathImage(IMAGE_FILES[i]), pipe_WIDTH, pipe_HEIGHT, false, false);
+			}
+			else if (i == 8) {
+				img = new Image(pathImage(IMAGE_FILES[i]), egg_WIDTH, egg_HEIGHT, false, false);
 			}
 
 			else {
