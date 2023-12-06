@@ -147,11 +147,7 @@ public class AngryFlappyBird extends Application {
     	//initialize pipe 
 	for(int i=0; i<DEF.pipe_COUNT; i++) {
 	
-<<<<<<< HEAD
     		int posX = i * DEF.pipe_WIDTH + 200;
-=======
-    		int posX = i * DEF.pipe_WIDTH +200;
->>>>>>> 03c232d0495a514dbddbd6822e11f0fac926372d
     		int posY = DEF.SCENE_HEIGHT- DEF.FLOOR_HEIGHT - DEF.pipe_HEIGHT;
     		
     		Pipe pipe = new Pipe(posX, posY, DEF.IMAGE.get("unitytut-pipe"));
@@ -166,11 +162,8 @@ public class AngryFlappyBird extends Application {
     	
 	for(int i=0; i<DEF.pipe_COUNT; i++) {
 		
-<<<<<<< HEAD
 		int posX = i * DEF.pipe_WIDTH + 200;
-=======
-		int posX = i * DEF.pipe_WIDTH +200;
->>>>>>> 03c232d0495a514dbddbd6822e11f0fac926372d
+
 		int posY = 0;
 		
 		Pipe pipe2 = new Pipe(posX, posY, DEF.IMAGE.get("unitytut-pipe2"));
@@ -257,11 +250,9 @@ public class AngryFlappyBird extends Application {
      		
      		for(int i=0; i<DEF.pipe_COUNT; i++) {
      			if (pipes.get(i).getPositionX() <= -DEF.pipe_WIDTH) {
-<<<<<<< HEAD
+
      				double nextX = pipes.get((i+1)%DEF.pipe_COUNT).getPositionX() + DEF.pipe_WIDTH + 200;
-=======
-     				double nextX = pipes.get((i+1)%DEF.pipe_COUNT).getPositionX() + DEF.pipe_WIDTH +200;
->>>>>>> 03c232d0495a514dbddbd6822e11f0fac926372d
+
      	        	double nextY = DEF.SCENE_HEIGHT -DEF.FLOOR_HEIGHT- DEF.pipe_HEIGHT;
      	        	pipes.get(i).setPositionXY(nextX, nextY);
      			}
@@ -281,11 +272,9 @@ public class AngryFlappyBird extends Application {
       		
       		for(int i=0; i<DEF.pipe_COUNT; i++) {
       			if (pipes2.get(i).getPositionX() <= -DEF.pipe_WIDTH) {
-<<<<<<< HEAD
+
       				double nextX = pipes2.get((i+1)%DEF.pipe_COUNT).getPositionX() + DEF.pipe_WIDTH + 200;
-=======
-      				double nextX = pipes2.get((i+1)%DEF.pipe_COUNT).getPositionX() + DEF.pipe_WIDTH +200;
->>>>>>> 03c232d0495a514dbddbd6822e11f0fac926372d
+
       	        	double nextY = 0;
       	        	pipes2.get(i).setPositionXY(nextX, nextY);
       			}
