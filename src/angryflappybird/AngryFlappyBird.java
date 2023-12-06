@@ -19,6 +19,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import javafx.scene.image.Image;
+
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -83,7 +85,56 @@ public class AngryFlappyBird extends Application {
         DEF.hardButton.setOnMouseClicked(e -> handleDifficultyButton("Hard"));
         
         gameControl = new VBox();
-        gameControl.getChildren().addAll(DEF.startButton,DEF.easyButton,DEF.mediumButton,DEF.hardButton);
+        gameControl.getChildren().addAll(DEF.startButton);
+        
+        // Add some spacing
+        gameControl.getChildren().add(new Text(""));  // Empty text for spacing
+
+        gameControl.getChildren().addAll(DEF.easyButton, DEF.mediumButton, DEF.hardButton);
+        
+        // Add some spacing
+        gameControl.getChildren().add(new Text(""));  // Empty text for spacing
+     // Add some spacing
+        gameControl.getChildren().add(new Text(""));  // Empty text for spacing
+        
+        // Display the white egg image
+        Image weggIconImage = new Image(DEF.pathImage("whiteegg"), DEF.weggicon_WIDTH, DEF.weggicon_HEIGHT, false, false);
+        ImageView weggIconImageView = new ImageView(weggIconImage);
+     // Create an HBox to hold the white egg image and text
+        HBox eggAndTextContainer = new HBox();
+        eggAndTextContainer.getChildren().addAll(weggIconImageView, new Text("  Bonus Points"));
+
+        // Add the container to the gameControl
+        gameControl.getChildren().add(eggAndTextContainer);
+
+        // Add some spacing
+        gameControl.getChildren().add(new Text(""));  // Empty text for spacing
+             
+        // Display the gold egg image 
+        Image geggIconImage = new Image(DEF.pathImage("goldegg"), DEF.geggicon_WIDTH, DEF.geggicon_HEIGHT, false, false);
+        ImageView geggIconImageView = new ImageView(geggIconImage);
+        // Create an HBox to hold the gold egg image and text
+        HBox geggAndTextContainer = new HBox();
+        geggAndTextContainer.getChildren().addAll(geggIconImageView, new Text("  Lets you snooze"));
+
+        // Add the container to the gameControl
+        gameControl.getChildren().add(geggAndTextContainer);
+
+        // Add some spacing
+        gameControl.getChildren().add(new Text(""));  // Empty text for spacing
+                
+        // Display the pig image 
+        Image pigIconImage = new Image(DEF.pathImage("pig"), DEF.pigicon_WIDTH, DEF.pigicon_HEIGHT, false, false);
+        ImageView pigIconImageView = new ImageView(pigIconImage);
+        // Create an HBox to hold the pig image and text
+        HBox pigAndTextContainer = new HBox();
+        pigAndTextContainer.getChildren().addAll(pigIconImageView, new Text("  Avoid Pigs"));
+
+        // Add the container to the gameControl
+        gameControl.getChildren().add(pigAndTextContainer);
+
+        // Add some spacing
+        gameControl.getChildren().add(new Text(""));  // Empty text for spacing
     }
     
     
@@ -144,7 +195,7 @@ public class AngryFlappyBird extends Application {
     		int posX = i * DEF.pipe_WIDTH;
     		int posY = DEF.SCENE_HEIGHT- DEF.FLOOR_HEIGHT - DEF.pipe_HEIGHT;
     		
-    		Pipe pipe = new Pipe(posX, posY, DEF.IMAGE.get("unitytut-pipe"));
+    		Pipe pipe = new Pipe(posX, posY, DEF.IMAGE.get("pipe"));
     		pipe.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
     		
 //    		if(i==1) {
@@ -161,7 +212,7 @@ public class AngryFlappyBird extends Application {
 		int posX = i * DEF.pipe_WIDTH;
 		int posY = 0;
 		
-		Pipe pipe2 = new Pipe(posX, posY, DEF.IMAGE.get("unitytut-pipe2"));
+		Pipe pipe2 = new Pipe(posX, posY, DEF.IMAGE.get("pipe2"));
 		pipe2.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
 		pipe2.render(gc);
 		
