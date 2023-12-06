@@ -24,7 +24,7 @@ public class Defines {
     final int BLOB_POS_X = 70;
     final int BLOB_POS_Y = 200;
     final int BLOB_DROP_TIME = 300000000;  	// the elapsed time threshold before the blob starts dropping
-    final int BLOB_DROP_VEL = 300;    		// the blob drop velocity    //change to 100 from 300
+    final int BLOB_DROP_VEL = 50;    		// the blob drop velocity    //change to 50 from 300
     final int BLOB_FLY_VEL = -40;
     final int BLOB_IMG_LEN = 4;
     final int BLOB_IMG_PERIOD = 5;
@@ -35,7 +35,7 @@ public class Defines {
     final int FLOOR_COUNT = 2;
     
  
-    final int pipe_WIDTH = 400;
+    final int pipe_WIDTH = 100;
      int pipe_HEIGHT = 100;
     final int pipe_COUNT = 2;
     
