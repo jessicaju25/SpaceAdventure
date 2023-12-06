@@ -6,10 +6,12 @@ import javafx.animation.ParallelTransition;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -141,7 +143,7 @@ public class AngryFlappyBird extends Application {
     	//initialize pipe 
 	for(int i=0; i<DEF.pipe_COUNT; i++) {
 	
-    		int posX = i * DEF.pipe_WIDTH;
+    		int posX = i * DEF.pipe_WIDTH + 200;
     		int posY = DEF.SCENE_HEIGHT- DEF.FLOOR_HEIGHT - DEF.pipe_HEIGHT;
     		
     		Pipe pipe = new Pipe(posX, posY, DEF.IMAGE.get("unitytut-pipe"));
@@ -158,7 +160,7 @@ public class AngryFlappyBird extends Application {
     	
 	for(int i=0; i<DEF.pipe_COUNT; i++) {
 		
-		int posX = i * DEF.pipe_WIDTH;
+		int posX = i * DEF.pipe_WIDTH + 200;
 		int posY = 0;
 		
 		Pipe pipe2 = new Pipe(posX, posY, DEF.IMAGE.get("unitytut-pipe2"));
@@ -183,16 +185,34 @@ public class AngryFlappyBird extends Application {
     class MyTimer extends AnimationTimer {
     	
     	int counter = 0;
+    	long backgroundCounter = 0;
     	
     	 @Override
     	 public void handle(long now) {   		 
     		 // time keeping
     	     elapsedTime = now - startTime;
     	     startTime = now;
-    	     
+    	     //double  tenSeconds = startTime * DEF.NANOSEC_TO_SEC;
+    	     ImageView background = (ImageView) gameScene.getChildren().get(0);
     	     // clear current scene
     	     gc.clearRect(0, 0, DEF.SCENE_WIDTH, DEF.SCENE_HEIGHT);
-
+    	     //background.setImage(DEF.IMAGE.get("background"));
+    	     if  ( now - backgroundCounter >= 10_000_000_000L ) {
+    	         //change the background image every 10 seconds 
+    	         
+    	         Image current = background.getImage(); //get current background
+    	         
+    	         if (current.equals(DEF.IMAGE.get("background"))) {
+    	         background.setImage(DEF.IMAGE.get("background0"));
+    	         }
+    	         else {
+    	             background.setImage(DEF.IMAGE.get("background"));
+    	         }
+    	         
+    	         backgroundCounter = now; //update counter
+    	     
+    	     }
+    	     
     	     if (GAME_START) {
     	    	 // step1: update floor
     	    	 moveFloor();
@@ -210,7 +230,7 @@ public class AngryFlappyBird extends Application {
     		
     		for(int i=0; i<DEF.FLOOR_COUNT; i++) {
     			if (floors.get(i).getPositionX() <= -DEF.FLOOR_WIDTH) {
-    				double nextX = floors.get((i+1)%DEF.FLOOR_COUNT).getPositionX() + DEF.FLOOR_WIDTH;
+    				double nextX = floors.get((i+1)%DEF.FLOOR_COUNT).getPositionX() + DEF.FLOOR_WIDTH ;
     	        	double nextY = DEF.SCENE_HEIGHT - DEF.FLOOR_HEIGHT;
     	        	floors.get(i).setPositionXY(nextX, nextY);
     			}
@@ -225,7 +245,7 @@ public class AngryFlappyBird extends Application {
      		
      		for(int i=0; i<DEF.pipe_COUNT; i++) {
      			if (pipes.get(i).getPositionX() <= -DEF.pipe_WIDTH) {
-     				double nextX = pipes.get((i+1)%DEF.pipe_COUNT).getPositionX() + DEF.pipe_WIDTH;
+     				double nextX = pipes.get((i+1)%DEF.pipe_COUNT).getPositionX() + DEF.pipe_WIDTH + 200;
      	        	double nextY = DEF.SCENE_HEIGHT -DEF.FLOOR_HEIGHT- DEF.pipe_HEIGHT;
      	        	pipes.get(i).setPositionXY(nextX, nextY);
      			}
@@ -238,7 +258,7 @@ public class AngryFlappyBird extends Application {
       		
       		for(int i=0; i<DEF.pipe_COUNT; i++) {
       			if (pipes2.get(i).getPositionX() <= -DEF.pipe_WIDTH) {
-      				double nextX = pipes2.get((i+1)%DEF.pipe_COUNT).getPositionX() + DEF.pipe_WIDTH;
+      				double nextX = pipes2.get((i+1)%DEF.pipe_COUNT).getPositionX() + DEF.pipe_WIDTH + 200;
       	        	double nextY = 0;
       	        	pipes2.get(i).setPositionXY(nextX, nextY);
       			}

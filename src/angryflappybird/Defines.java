@@ -59,7 +59,7 @@ public class Defines {
     // coefficients related to media display
     final String STAGE_TITLE = "Angry Flappy Bird";
 	private final String IMAGE_DIR = "../resources/images/";
-    final String[] IMAGE_FILES = {"background","blob0", "blob1", "blob2", "blob3", "floor","unitytut-pipe","unitytut-pipe2"};
+    final String[] IMAGE_FILES = {"background","background0" , "blob0", "blob1", "blob2", "blob3", "floor","unitytut-pipe","unitytut-pipe2"};
 
     final HashMap<String, ImageView> IMVIEW = new HashMap<String, ImageView>();
     final HashMap<String, Image> IMAGE = new HashMap<String, Image>();
@@ -78,14 +78,14 @@ public class Defines {
 		// initialize images
 		for(int i=0; i<IMAGE_FILES.length; i++) {
 			Image img;
-			if (i == 5) {
+			if (i == 6) {
 				img = new Image(pathImage(IMAGE_FILES[i]), FLOOR_WIDTH, FLOOR_HEIGHT,  false, false);
 			}
-			else if (i == 1 || i == 2 || i == 3 || i == 4){
+			else if (i == 2 || i == 3 || i == 4 || i == 5){
 				img = new Image(pathImage(IMAGE_FILES[i]), BLOB_WIDTH, BLOB_HEIGHT, false, false);
 			}
 			
-			else if (i ==6 || i ==7) {
+			else if (i == 7  || i == 8 ) {
 				img = new Image(pathImage(IMAGE_FILES[i]), pipe_WIDTH, pipe_HEIGHT, false, false);
 			}
 
