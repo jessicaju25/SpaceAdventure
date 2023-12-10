@@ -22,7 +22,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.scene.image.Image;
-
+import java.util.Random;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -41,8 +41,9 @@ public class AngryFlappyBird extends Application {
     private ArrayList<Bird> floors;
     private ArrayList<Pipe> pipes;
     private ArrayList<Pipe> pipes2;
-    private Bird egg;
-    private int count;
+    private ArrayList<Bird> eggs;
+    private Pig pig;
+
     // game flags
     private boolean CLICKED, GAME_START, GAME_OVER;
     
@@ -50,6 +51,10 @@ public class AngryFlappyBird extends Application {
     private Group gameScene;	 // the left half of the scene
     private VBox gameControl;	 // the right half of the GUI (control)
     private GraphicsContext gc;		
+    private long lastEggAppearanceTime = 0;
+    private long  pigAppearanceTime =0;
+    private  ArrayList<Integer> pipeHeight;
+    
     
 	// the mandatory main method 
     public static void main(String[] args) {
@@ -167,7 +172,22 @@ public class AngryFlappyBird extends Application {
         floors = new ArrayList<>();
         pipes = new ArrayList<>();
         pipes2 = new ArrayList<>();
-        count= 0;
+        pipeHeight = new  ArrayList<>();
+        eggs = new ArrayList<>();
+        pipeHeight.add(25);
+        pipeHeight.add(50); 
+        pipeHeight.add(75);
+        pipeHeight.add(100); 
+        pipeHeight.add(125); 
+        pipeHeight.add(150);
+        pipeHeight.add(175);
+        pipeHeight.add(200);
+        pipeHeight.add(225);
+     
+        
+        
+        
+        
         
     	if(firstEntry) {
     		// create two canvases
@@ -188,6 +208,7 @@ public class AngryFlappyBird extends Application {
     		int posX = i * DEF.FLOOR_WIDTH ;
     		int posY = DEF.SCENE_HEIGHT - DEF.FLOOR_HEIGHT;
     		
+    	
     		Bird floor = new Bird(posX, posY, DEF.IMAGE.get("floor"));
     		floor.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
     		floor.render(gc);
@@ -208,7 +229,8 @@ public class AngryFlappyBird extends Application {
     		pipe.render(gc);
     		
     		pipes.add(pipe);
-    
+    		System.out.println("This is pipe " + i +" "+ pipes.get(i).getPositionX());
+    	
     	}
     	
 	for(int i=0; i<DEF.pipe_COUNT; i++) {
@@ -223,7 +245,20 @@ public class AngryFlappyBird extends Application {
 		
 		pipes2.add(pipe2);
 	}
+	
+	
+	//initialize egg
+for(int i=0; i<DEF.egg_COUNT; i++) {
+		
+	
+		
+		Bird egg = new Bird();
+		
+		eggs.add(egg);
+	}
     
+	//Y postion randomized 
+	//array lit 
         
         // initialize blob
         blob = new Bird(DEF.BLOB_POS_X, DEF.BLOB_POS_Y,DEF.IMAGE.get("blob0"));
@@ -272,7 +307,7 @@ public class AngryFlappyBird extends Application {
     	    	 moveFloor();
     	    	 movePipes();
     	    	 movePipes2();
-    	    	
+    	    	 pigappear(DEF.pig_POS_X,DEF.pig_POS_Y);
     	    	 // step2: update blob
     	    	 moveBlob();
     	    	 checkegg();
@@ -298,23 +333,35 @@ public class AngryFlappyBird extends Application {
     	 
     	 
     	 private void movePipes() {
-     		
+    		 long currentTime = System.nanoTime();
      		for(int i=0; i<DEF.pipe_COUNT; i++) {
      			if (pipes.get(i).getPositionX() <= -DEF.pipe_WIDTH) {
-
+     		
      				double nextX = pipes.get((i+1)%DEF.pipe_COUNT).getPositionX() + DEF.pipe_WIDTH + 200;
 
      	        	double nextY = DEF.SCENE_HEIGHT -DEF.FLOOR_HEIGHT- DEF.pipe_HEIGHT;
      	        	pipes.get(i).setPositionXY(nextX, nextY);
+     	        	
+     	   		Random generator = new Random();
+ 				int randomIndex = generator.nextInt(pipeHeight.size());
+                DEF.pipe_HEIGHT = pipeHeight.get(randomIndex);
      			}
+     			
      			pipes.get(i).render(gc);
      			pipes.get(i).update(DEF.SCENE_SHIFT_TIME);
      			double pipeVelocityX = pipes.get(i).getVelocityX();
      			double pipeVelocityY = pipes.get(i).getVelocityY();
      			
-//     			  if (elapsedTime > 0 && (elapsedTime * DEF.NANOSEC_TO_SEC) % 5 == 0) {
-     		            whiteEggAppear(pipeVelocityX, pipeVelocityY);
-//     		        }
+
+     	       // if (currentTime - lastEggAppearanceTime >= 15_000_000_000L) { // 15 seconds in nanoseconds
+     	            whiteEggAppear(pipeVelocityX, pipeVelocityY);
+//     	            lastEggAppearanceTime = currentTime; // Update the last appearance time
+//     	        }
+     	        
+//     	       if (currentTime - pigAppearanceTime >= 15_000_000_000L) {
+//     	       pigappear(pipeVelocityX, pipeVelocityY);
+//     	      pigAppearanceTime = currentTime;
+//     	       }
      		}
      		
      	 }
@@ -328,6 +375,8 @@ public class AngryFlappyBird extends Application {
 
       	        	double nextY = 0;
       	        	pipes2.get(i).setPositionXY(nextX, nextY);
+      	        	
+      	      
       			}
       			pipes2.get(i).render(gc);
       			pipes2.get(i).update(DEF.SCENE_SHIFT_TIME);
@@ -364,19 +413,26 @@ public class AngryFlappyBird extends Application {
     		 		
     		   		int posX = DEF.pipe_WIDTH;
     	    		int posY = DEF.SCENE_HEIGHT- DEF.FLOOR_HEIGHT - DEF.pipe_HEIGHT- DEF.egg_HEIGHT;
-    	    	    egg = new Bird(posX, posY,DEF.IMAGE.get("whiteegg"));
-    	    	    egg.setVelocity(x, y);
-    	    	    egg.render(gc);
-
+    	    		   // Create a new egg only if it's null
+    	    	for(int i = 0; i<DEF.egg_COUNT; i++) {
+    	    	        eggs.get(i).setImage(DEF.IMAGE.get("whiteegg"));
+    	    	        //eggs.get(i).setVelocity(x, y);
+    	    	    
+    	    	    eggs.get(i).setPositionXY(posX, posY);
+    	    	    eggs.get(i).render(gc);
+    	    	}
     	 }
+    	 
+    	 
     	 
     	 // possibly condense this code and also look into cropping the pipe image 
     	 public void checkCollision() {
     		 
-    		 
-    		if (blob.intersectsSprite(egg)) {
-    			egg.setPositionXY(-100,-100);
-    		}
+//    		 
+//    		if (blob.intersectsSprite(egg)) {
+//    			//egg.setPositionXY(-100,-100);
+//    			egg = null;
+//    		}
     		// check collision  
 			for (Bird floor: floors) {
 				GAME_OVER = GAME_OVER || blob.intersectsSprite(floor);
@@ -410,9 +466,18 @@ public class AngryFlappyBird extends Application {
     	 
     	 public void checkegg() {
     		 
-    		 if (blob.intersectsSprite(egg)) {
-    		egg.setImage(null); 
-     		}
+    		 for (Bird egg: eggs) {
+                 if(blob.intersectsSprite(egg)) {
+                     // taking egg out of scene
+                     egg.setPositionXY(-3000, -3000);
+                     egg.render(gc);
+                 }
+    	 }
+    	 }
+    	 public void pigappear(double x, double y) {
+    		pig = new Pig(x, y,DEF.IMAGE.get("pig"));
+    		 pig.setVelocity(0, DEF.pig_DROP_VEL);
+    		 pig.render(gc);
     	 }
 	     private void showHitEffect() {
 	        ParallelTransition parallelTransition = new ParallelTransition();

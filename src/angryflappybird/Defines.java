@@ -46,6 +46,7 @@ public class Defines {
 
     final int egg_WIDTH = 70;
     final int egg_HEIGHT = 70;
+    final int egg_COUNT = 2;
 
   
    //coefficients related to yellow egg

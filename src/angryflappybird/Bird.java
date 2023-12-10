@@ -45,6 +45,11 @@ public class Bird implements Sprite  {
 	        this.width = image.getWidth();
 	        this.height = image.getHeight();
 	    }
+	    
+	    public void removeImge() {
+	    	this.image = null;
+	    }
+	    
 
 	    public void setPositionXY(double positionX, double positionY) {
 	        this.positionX = positionX;
@@ -97,6 +102,7 @@ public class Bird implements Sprite  {
 	        positionX += velocityX * time;
 	        positionY += velocityY * time;
 	    }
+	    
 	}
 	
 
