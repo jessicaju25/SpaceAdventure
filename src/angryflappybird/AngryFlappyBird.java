@@ -18,14 +18,27 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.scene.image.Image;
 import java.util.Random;
+import java.io.File;
+//import java.awt.Color;
+//import java.awt.Font;
 import java.io.PipedInputStream;
 import java.util.ArrayList;
 import java.util.Random;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+//import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
+import javafx.scene.paint.Color;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 
 //The Application layer
 public class AngryFlappyBird extends Application {
@@ -43,6 +56,7 @@ public class AngryFlappyBird extends Application {
     private ArrayList<Pipe> pipes2;
     private ArrayList<Bird> eggs;
     private Pig pig;
+    private int pipecount, eggcount;
 
     // game flags
     private boolean CLICKED, GAME_START, GAME_OVER;
@@ -55,6 +69,12 @@ public class AngryFlappyBird extends Application {
     private long  pigAppearanceTime =0;
     private  ArrayList<Integer> pipeHeight;
     private int pipeCounter = 0;
+    private int score;
+    private boolean passed;
+    private boolean  eggcheck;
+    private MediaPlayer backgroundMusic;
+    Text scoreText;
+    
     
     
 	// the mandatory main method 
@@ -83,20 +103,31 @@ public class AngryFlappyBird extends Application {
         primaryStage.setTitle(DEF.STAGE_TITLE);
         primaryStage.setResizable(false);
         primaryStage.show();
+        String backgroundMusicFile = "backgroundMusic.mp3";
+        Media music = new Media (new File(backgroundMusicFile).toURI().toString());
+        backgroundMusic = new MediaPlayer(music);
+        backgroundMusic.setCycleCount(MediaPlayer.INDEFINITE);
+        backgroundMusic.play();
     }
     
     // the getContent method sets the Scene layer
     private void resetGameControl() {
         
         DEF.startButton.setOnMouseClicked(this::mouseClickHandler);
-        
+   
         DEF.easyButton.setOnMouseClicked(e -> handleDifficultyButton("Easy"));
         DEF.mediumButton.setOnMouseClicked(e -> handleDifficultyButton("Medium"));
         DEF.hardButton.setOnMouseClicked(e -> handleDifficultyButton("Hard"));
         
         gameControl = new VBox();
         gameControl.getChildren().addAll(DEF.startButton);
+        scoreText = new Text("Score: 0" );
+        scoreText.setFont(Font.font( "Times New Roman", FontWeight.BOLD, 30));
+        scoreText.setFill(Color.BLACK);
         
+        scoreText.setLayoutX(DEF.SCENE_WIDTH - 390);
+        scoreText.setLayoutY(35);
+        gameControl.getChildren().add(scoreText);
         // Add some spacing
         gameControl.getChildren().add(new Text(""));  // Empty text for spacing
 
@@ -113,13 +144,13 @@ public class AngryFlappyBird extends Application {
      // Create an HBox to hold the white egg image and text
         HBox eggAndTextContainer = new HBox();
         eggAndTextContainer.getChildren().addAll(weggIconImageView, new Text("  Bonus Points"));
-
+        
         // Add the container to the gameControl
         gameControl.getChildren().add(eggAndTextContainer);
 
         // Add some spacing
         gameControl.getChildren().add(new Text(""));  // Empty text for spacing
-             
+       
         // Display the gold egg image 
         Image geggIconImage = new Image(DEF.pathImage("goldegg"), DEF.geggicon_WIDTH, DEF.geggicon_HEIGHT, false, false);
         ImageView geggIconImageView = new ImageView(geggIconImage);
@@ -183,8 +214,11 @@ public class AngryFlappyBird extends Application {
         pipeHeight.add(150);
         pipeHeight.add(175);
         pipeHeight.add(200);
-        pipeHeight.add(225);
+        //pipeHeight.add(225);
         pipeCounter = 0;
+        score = 0;
+        pipecount = 1;
+        eggcount =0;
      
         
         
@@ -216,7 +250,7 @@ public class AngryFlappyBird extends Application {
     		floor.render(gc);
     		
     		floors.add(floor);
-    		
+    		passed = false;
     	}
    
     	//initialize pipe 
@@ -257,12 +291,14 @@ for(int i=0; i<DEF.egg_COUNT; i++) {
 		Bird egg = new Bird(-3000, -3000, DEF.IMAGE.get("whiteegg"));
 		
 		eggs.add(egg);
+		eggcheck = false;
 	}
 
 //initialize pig
 
 pig = new Pig(-3000, -3000 ,DEF.IMAGE.get("pig"));
-pig.render(gc);
+//pig.setVelocity(sceneVelocity, pigDropVelocity);z
+//pig.render(gc);
 	//Y postion randomized 
 	//array lit 
         
@@ -316,12 +352,28 @@ pig.render(gc);
     	    	 //pigappear(DEF.pig_POS_X,DEF.pig_POS_Y);
     	    	 // step2: update blob
     	    	 moveBlob();
-    	    	 checkegg();
+    	    	 //checkegg();
     	    	 checkCollision();
+    	    	 
+    	    	 System.out.println(score);
     	    	 
     	     }
     	 }
     	 
+    	 private void score(int i) {
+    		 if (pipes.get(i).getPositionX() <= blob.getPositionX() && passed== false) {
+    		 score = score +1;
+    		 passed = true;
+    		 eggcount = eggcount +1;
+    		 scoreText.setText("Score: " + score); 
+    		 }
+    		 
+//    		 else if (eggcheck == true ){
+//    			 score = score +5;
+//    			 scoreText.setText("Score: " + score); 
+//    			 eggcheck = false;
+//    		 }
+    	 }
     	 // step1: update floor
     	 private void moveFloor() {
     		
@@ -342,6 +394,7 @@ pig.render(gc);
     		 long currentTime = System.nanoTime();
      		for(int i=0; i<DEF.pipe_COUNT; i++) {
      			if (pipes.get(i).getPositionX() <= -DEF.pipe_WIDTH) {
+     				passed = false;
      		
      				double nextX = pipes.get((i+1)%DEF.pipe_COUNT).getPositionX() + DEF.pipe_WIDTH + 200;
 
@@ -359,16 +412,24 @@ pig.render(gc);
      			double pipeVelocityY = pipes.get(i).getVelocityY();
      			
      			Random generator = new Random();
-                int randomPipe = generator.nextInt(1,5);
+               // int randomPipe = generator.nextInt(1,5);
+                int randomegg = generator.nextInt(eggcount, eggcount +5);
+                
+                //if (pipecount == randomegg) {
                 //DEF.pipe_HEIGHT = pipeHeight.get(randomPipe);
      			
      			// if (randomPipe % 2 == 0) {
                 //pipeCounter++;
              
-                pigappear(i);
-                if (generator.nextDouble()<0.2)
-                {
+                //pigappear(i);
+               // if (generator.nextDouble()<0.2)
+               // {
                     whiteEggAppear(i);
+               // }
+                //}
+                score(i);
+                if (score%5 == 0) {
+pigappear(i);
                 }
 //     			whiteEggAppear(i);
      			  
@@ -436,7 +497,7 @@ pig.render(gc);
     	   
     	    	    eggs.get(i).setPositionXY(pipes.get(i).getPositionX() ,pipes.get(i).getPositionY() - DEF.egg_HEIGHT);
     	    	    eggs.get(i).render(gc);
-    	    	    //checkegg();
+    	    	    checkegg();
     	    	}
     	 
     	 
@@ -486,8 +547,12 @@ pig.render(gc);
     		 for (Bird egg: eggs) {
                  if(blob.intersectsSprite(egg)) {
                      // taking egg out of scene
-                     egg.setPositionXY(-3000, -3000);
-                    // egg.render(gc);
+                     egg.setPositionXY(0, 0);
+                     
+                    egg.render(gc);
+                    eggcheck = true;
+                    //score = score + 5;
+                    //eggs.remove(egg);
                  }
     	 }
     	 }
