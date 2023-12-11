@@ -54,6 +54,7 @@ public class AngryFlappyBird extends Application {
     private long lastEggAppearanceTime = 0;
     private long  pigAppearanceTime =0;
     private  ArrayList<Integer> pipeHeight;
+    private int pipeCounter = 0;
     
     
 	// the mandatory main method 
@@ -183,6 +184,7 @@ public class AngryFlappyBird extends Application {
         pipeHeight.add(175);
         pipeHeight.add(200);
         pipeHeight.add(225);
+        pipeCounter = 0;
      
         
         
@@ -361,8 +363,14 @@ pig.render(gc);
                 //DEF.pipe_HEIGHT = pipeHeight.get(randomPipe);
      			
      			// if (randomPipe % 2 == 0) {
+                //pipeCounter++;
+             
                 pigappear(i);
-     			whiteEggAppear(i);
+                if (generator.nextDouble()<0.2)
+                {
+                    whiteEggAppear(i);
+                }
+//     			whiteEggAppear(i);
      			  
      			//}
      			
