@@ -23,7 +23,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.scene.image.Image;
 import java.util.Random;
-
+import java.io.PipedInputStream;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -216,6 +216,7 @@ public class AngryFlappyBird extends Application {
     		floors.add(floor);
     		
     	}
+   
     	//initialize pipe 
 	for(int i=0; i<DEF.pipe_COUNT; i++) {
 	
@@ -251,12 +252,15 @@ public class AngryFlappyBird extends Application {
 for(int i=0; i<DEF.egg_COUNT; i++) {
 		
 	
-		
-		Bird egg = new Bird();
+		Bird egg = new Bird(-3000, -3000, DEF.IMAGE.get("whiteegg"));
 		
 		eggs.add(egg);
 	}
-    
+
+//initialize pig
+
+pig = new Pig(-3000, -3000 ,DEF.IMAGE.get("pig"));
+pig.render(gc);
 	//Y postion randomized 
 	//array lit 
         
@@ -307,7 +311,7 @@ for(int i=0; i<DEF.egg_COUNT; i++) {
     	    	 moveFloor();
     	    	 movePipes();
     	    	 movePipes2();
-    	    	 pigappear(DEF.pig_POS_X,DEF.pig_POS_Y);
+    	    	 //pigappear(DEF.pig_POS_X,DEF.pig_POS_Y);
     	    	 // step2: update blob
     	    	 moveBlob();
     	    	 checkegg();
@@ -352,16 +356,19 @@ for(int i=0; i<DEF.egg_COUNT; i++) {
      			double pipeVelocityX = pipes.get(i).getVelocityX();
      			double pipeVelocityY = pipes.get(i).getVelocityY();
      			
-
-     	       // if (currentTime - lastEggAppearanceTime >= 15_000_000_000L) { // 15 seconds in nanoseconds
-     	            whiteEggAppear(pipeVelocityX, pipeVelocityY);
-//     	            lastEggAppearanceTime = currentTime; // Update the last appearance time
-//     	        }
-     	        
-//     	       if (currentTime - pigAppearanceTime >= 15_000_000_000L) {
-//     	       pigappear(pipeVelocityX, pipeVelocityY);
-//     	      pigAppearanceTime = currentTime;
-//     	       }
+     			Random generator = new Random();
+                int randomPipe = generator.nextInt(1,5);
+                //DEF.pipe_HEIGHT = pipeHeight.get(randomPipe);
+     			
+     			// if (randomPipe % 2 == 0) {
+                pigappear(i);
+     			whiteEggAppear(i);
+     			  
+     			//}
+     			
+     			
+     			
+     	          
      		}
      		
      	 }
@@ -408,20 +415,22 @@ for(int i=0; i<DEF.egg_COUNT; i++) {
     	 }
     	 
     	 
-    	 private void whiteEggAppear(double x, double y) {
+    	 private void whiteEggAppear(int i) {
 
-    		 		
-    		   		int posX = DEF.pipe_WIDTH;
-    	    		int posY = DEF.SCENE_HEIGHT- DEF.FLOOR_HEIGHT - DEF.pipe_HEIGHT- DEF.egg_HEIGHT;
-    	    		   // Create a new egg only if it's null
-    	    	for(int i = 0; i<DEF.egg_COUNT; i++) {
-    	    	        eggs.get(i).setImage(DEF.IMAGE.get("whiteegg"));
+//    		 		
+//    		   		int posX = DEF.pipe_WIDTH;
+//    	    		int posY = DEF.SCENE_HEIGHT- DEF.FLOOR_HEIGHT - DEF.pipe_HEIGHT- DEF.egg_HEIGHT;
+//    	    		   // Create a new egg only if it's null
+//    	    	for(int i = 0; i<DEF.egg_COUNT; i++) {
+//    	    	       
     	    	        //eggs.get(i).setVelocity(x, y);
-    	    	    
-    	    	    eggs.get(i).setPositionXY(posX, posY);
+//    	     eggs.get(i).setImage(DEF.IMAGE.get("whiteegg"));
+    	   
+    	    	    eggs.get(i).setPositionXY(pipes.get(i).getPositionX() ,pipes.get(i).getPositionY() - DEF.egg_HEIGHT);
     	    	    eggs.get(i).render(gc);
+    	    	    //checkegg();
     	    	}
-    	 }
+    	 
     	 
     	 
     	 
@@ -470,14 +479,15 @@ for(int i=0; i<DEF.egg_COUNT; i++) {
                  if(blob.intersectsSprite(egg)) {
                      // taking egg out of scene
                      egg.setPositionXY(-3000, -3000);
-                     egg.render(gc);
+                    // egg.render(gc);
                  }
     	 }
     	 }
-    	 public void pigappear(double x, double y) {
-    		pig = new Pig(x, y,DEF.IMAGE.get("pig"));
-    		 pig.setVelocity(0, DEF.pig_DROP_VEL);
-    		 pig.render(gc);
+    	 public void pigappear(int i) {
+    		
+    		pig.setPositionXY(pipes2.get(i).getPositionX(), pipes2.get(i).getPositionY());
+    		pig.setVelocity(0, DEF.pig_DROP_VEL);
+    		pig.render(gc);
     	 }
 	     private void showHitEffect() {
 	        ParallelTransition parallelTransition = new ParallelTransition();

@@ -37,6 +37,7 @@ public class Defines {
     //coefficients related to pipes
     final int pipe_WIDTH = 100;
      int pipe_HEIGHT = 100;
+     int pipe_HEIGHT1 = 500;
     final int pipe_COUNT = 2;
 
     //coefficients related to white egg
@@ -60,9 +61,10 @@ public class Defines {
    final int pig_POS_X = 70;
    final int pig_POS_Y = 200;
    final int pig_DROP_TIME = 300000000;  	
-   final int pig_DROP_VEL = 50;    		
+   final int pig_DROP_VEL = 30;    		
    final int pig_IMG_LEN = 1;
    final int pig_IMG_PERIOD = 5;
+   
    
     // coefficients related to time
     final int SCENE_SHIFT_TIME = 5;
@@ -116,9 +118,12 @@ public class Defines {
 				img = new Image(pathImage(IMAGE_FILES[i]), BLOB_WIDTH, BLOB_HEIGHT, false, false);
 			}
 			
-			else if (i == 7  || i == 8 ) {
+			else if (i == 8  ) {
 				img = new Image(pathImage(IMAGE_FILES[i]), pipe_WIDTH, pipe_HEIGHT, false, false);
 			}
+			else if (i == 7  ) {
+	                img = new Image(pathImage(IMAGE_FILES[i]), pipe_WIDTH, pipe_HEIGHT1, false, false);
+	            }
 
 			
 			else if(i==10) {
