@@ -86,4 +86,10 @@ public class Pig implements Sprite{
 	        positionX += velocityX * time;
 	        positionY += velocityY * time;
 	    }
+
+        public void setPositionY(double positionY) {
+            // TODO Auto-generated method stub
+            this.positionY = positionY;
+            
+        }
 }

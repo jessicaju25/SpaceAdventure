@@ -57,6 +57,7 @@ public class AngryFlappyBird extends Application {
     private ArrayList<Bird> eggs;
     private Pig pig;
     private int pipecount, eggcount;
+    private ArrayList<Pig > pigs;
 
     // game flags
     private boolean CLICKED, GAME_START, GAME_OVER;
@@ -206,6 +207,7 @@ public class AngryFlappyBird extends Application {
         pipes2 = new ArrayList<>();
         pipeHeight = new  ArrayList<>();
         eggs = new ArrayList<>();
+        pigs = new ArrayList<>();
         pipeHeight.add(25);
         pipeHeight.add(50); 
         pipeHeight.add(75);
@@ -262,6 +264,7 @@ public class AngryFlappyBird extends Application {
     		Pipe pipe = new Pipe(posX, posY, DEF.IMAGE.get("pipe"));
     		pipe.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
     		
+    		
 
     		pipe.render(gc);
     		
@@ -289,7 +292,8 @@ for(int i=0; i<DEF.egg_COUNT; i++) {
 		
 	
 		Bird egg = new Bird(-3000, -3000, DEF.IMAGE.get("whiteegg"));
-		
+		egg.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
+		egg.render(gc);
 		eggs.add(egg);
 		eggcheck = false;
 	}
@@ -347,7 +351,8 @@ pig = new Pig(-3000, -3000 ,DEF.IMAGE.get("pig"));
     	     if (GAME_START) {
     	    	 // step1: update floor
     	    	 moveFloor();
-    	    	 movePipes();
+    	    	 updatePipes();
+    	    	 //movePipes();
     	    	 movePipes2();
     	    	 //pigappear(DEF.pig_POS_X,DEF.pig_POS_Y);
     	    	 // step2: update blob
@@ -388,11 +393,22 @@ pig = new Pig(-3000, -3000 ,DEF.IMAGE.get("pig"));
     		}
     	 }
     	 
-    	 
-    	 
-    	 private void movePipes() {
-    		 long currentTime = System.nanoTime();
-     		for(int i=0; i<DEF.pipe_COUNT; i++) {
+    	 private void updatePipes() {
+    		for(int i=0; i<DEF.pipe_COUNT; i++) {
+    			movePipes(i);
+    			updateEggs(i);
+    			//whiteEggAppear(i);
+    		}
+    	 }
+    	 	private void updateEggs(int i) {
+    	 		//whiteEggAppear(i);
+        		eggs.get(i).render(gc);
+        		eggs.get(i).update(DEF.SCENE_SHIFT_TIME);
+        		//eggs.get(i).update(DEF.SCENE_SHIFT_INCR);
+        	}
+    	 private void movePipes(int i) {
+//    		 long currentTime = System.nanoTime();
+//     		for(int i=0; i<DEF.pipe_COUNT; i++) {
      			if (pipes.get(i).getPositionX() <= -DEF.pipe_WIDTH) {
      				passed = false;
      		
@@ -400,47 +416,36 @@ pig = new Pig(-3000, -3000 ,DEF.IMAGE.get("pig"));
 
      	        	double nextY = DEF.SCENE_HEIGHT -DEF.FLOOR_HEIGHT- DEF.pipe_HEIGHT;
      	        	pipes.get(i).setPositionXY(nextX, nextY);
-     	        	
+     	        	 whiteEggAppear(i);
      	   		Random generator = new Random();
  				int randomIndex = generator.nextInt(pipeHeight.size());
                 DEF.pipe_HEIGHT = pipeHeight.get(randomIndex);
+               
      			}
      			
      			pipes.get(i).render(gc);
      			pipes.get(i).update(DEF.SCENE_SHIFT_TIME);
-     			double pipeVelocityX = pipes.get(i).getVelocityX();
-     			double pipeVelocityY = pipes.get(i).getVelocityY();
+     			score(i);
      			
-     			Random generator = new Random();
-               // int randomPipe = generator.nextInt(1,5);
-                int randomegg = generator.nextInt(eggcount, eggcount +5);
-                
-                //if (pipecount == randomegg) {
-                //DEF.pipe_HEIGHT = pipeHeight.get(randomPipe);
-     			
-     			// if (randomPipe % 2 == 0) {
-                //pipeCounter++;
-             
-                //pigappear(i);
-               // if (generator.nextDouble()<0.2)
-               // {
-                    whiteEggAppear(i);
-               // }
-                //}
-                score(i);
-                if (score%5 == 0) {
-pigappear(i);
-                }
-//     			whiteEggAppear(i);
-     			  
-     			//}
+
+   
+
      			
      			
      			
      	          
      		}
      		
-     	 }
+     	 
+    	 private void whiteEggAppear(int i) {
+    		 
+    		// if (eggcount %2 ==0) {
+	    	    eggs.get(i).setPositionXY(pipes.get(i).getPositionX() ,pipes.get(i).getPositionY() - DEF.egg_HEIGHT);
+	    	    //eggs.get(i).render(gc);
+    		// }
+	    	
+	    	}
+   
     	 
     	 private void movePipes2() {
       		
@@ -484,21 +489,7 @@ pigappear(i);
     	 }
     	 
     	 
-    	 private void whiteEggAppear(int i) {
 
-//    		 		
-//    		   		int posX = DEF.pipe_WIDTH;
-//    	    		int posY = DEF.SCENE_HEIGHT- DEF.FLOOR_HEIGHT - DEF.pipe_HEIGHT- DEF.egg_HEIGHT;
-//    	    		   // Create a new egg only if it's null
-//    	    	for(int i = 0; i<DEF.egg_COUNT; i++) {
-//    	    	       
-    	    	        //eggs.get(i).setVelocity(x, y);
-//    	     eggs.get(i).setImage(DEF.IMAGE.get("whiteegg"));
-    	   
-    	    	    eggs.get(i).setPositionXY(pipes.get(i).getPositionX() ,pipes.get(i).getPositionY() - DEF.egg_HEIGHT);
-    	    	    eggs.get(i).render(gc);
-    	    	    checkegg();
-    	    	}
     	 
     	 
     	 
@@ -506,12 +497,7 @@ pigappear(i);
     	 // possibly condense this code and also look into cropping the pipe image 
     	 public void checkCollision() {
     		 
-//    		 
-//    		if (blob.intersectsSprite(egg)) {
-//    			//egg.setPositionXY(-100,-100);
-//    			egg = null;
-//    		}
-    		// check collision  
+    		 checkegg();
 			for (Bird floor: floors) {
 				GAME_OVER = GAME_OVER || blob.intersectsSprite(floor);
 			}
@@ -547,12 +533,11 @@ pigappear(i);
     		 for (Bird egg: eggs) {
                  if(blob.intersectsSprite(egg)) {
                      // taking egg out of scene
-                     egg.setPositionXY(0, 0);
+                     egg.setPositionXY(-3000, -3000);
                      
                     egg.render(gc);
                     eggcheck = true;
-                    //score = score + 5;
-                    //eggs.remove(egg);
+            
                  }
     	 }
     	 }
