@@ -55,11 +55,15 @@ public class AngryFlappyBird extends Application {
     private ArrayList<Pipe> pipes;
     private ArrayList<Pipe> pipes2;
     private ArrayList<Bird> eggs;
+<<<<<<< HEAD
     private ArrayList<Bird> goldEggs;
     private Pig pig;
+=======
+    //private Pig pig;
+>>>>>>> 00e5887d388dea0daa0974428875b9a83d04c5b0
     private int pipecount, eggcount;
     private ArrayList<Pig > pigs;
-
+    private ArrayList<Bird>  goldeggs;
     // game flags
     private boolean CLICKED, GAME_START, GAME_OVER;
     
@@ -70,10 +74,13 @@ public class AngryFlappyBird extends Application {
     private long lastEggAppearanceTime = 0;
     private long  pigAppearanceTime =0;
     private  ArrayList<Integer> pipeHeight;
+ 
     private int pipeCounter = 0;
     private int score;
     private boolean passed;
     private boolean  eggcheck;
+    private boolean goldeggcheck;
+    private boolean pigcheck;
     private MediaPlayer backgroundMusic;
     Text scoreText;
     // snoozing feature
@@ -226,6 +233,7 @@ public class AngryFlappyBird extends Application {
         eggs = new ArrayList<>();
         goldEggs = new ArrayList<>();
         pigs = new ArrayList<>();
+        goldeggs = new ArrayList<>();
         pipeHeight.add(25);
         pipeHeight.add(50); 
         pipeHeight.add(75);
@@ -234,6 +242,7 @@ public class AngryFlappyBird extends Application {
         pipeHeight.add(150);
         pipeHeight.add(175);
         pipeHeight.add(200);
+        
         //pipeHeight.add(225);
         pipeCounter = 0;
         score = 0;
@@ -276,7 +285,7 @@ public class AngryFlappyBird extends Application {
     	//initialize pipe 
     	for(int i=0; i<DEF.pipe_COUNT; i++) {
 	
-    		int posX = i * DEF.pipe_WIDTH + 200;
+    		int posX = i * (DEF.pipe_WIDTH + 200) +DEF.SCENE_WIDTH;
     		int posY = DEF.SCENE_HEIGHT- DEF.FLOOR_HEIGHT - DEF.pipe_HEIGHT;
     		
     		Pipe pipe = new Pipe(posX, posY, DEF.IMAGE.get("pipe"));
@@ -287,12 +296,13 @@ public class AngryFlappyBird extends Application {
     		pipe.render(gc);
     		
     		pipes.add(pipe);
-    		System.out.println("This is pipe " + i +" "+ pipes.get(i).getPositionX());
+    		//System.out.println("This is pipe " + i +" "+ pipes.get(i).getPositionX());
     	
     	}
     	
     	for(int i=0; i<DEF.pipe_COUNT; i++) {
 		
+<<<<<<< HEAD
 			int posX = i * DEF.pipe_WIDTH + 200;
 	
 			int posY = 0;
@@ -325,6 +335,58 @@ public class AngryFlappyBird extends Application {
 		//Y postion randomized 
 		//array lit 
         
+=======
+		int posX = i * (DEF.pipe_WIDTH + 200) +DEF.SCENE_WIDTH;
+
+		int posY = 0;
+		
+		Pipe pipe2 = new Pipe(posX, posY, DEF.IMAGE.get("pipe2"));
+		pipe2.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
+		pipe2.render(gc);
+		
+		pipes2.add(pipe2);
+	}
+	
+	
+	//initialize egg
+for(int i=0; i<DEF.egg_COUNT; i++) {
+		
+	
+		Bird egg = new Bird(-3000, -3000, DEF.IMAGE.get("whiteegg"));
+		egg.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
+		
+		egg.render(gc);
+		eggs.add(egg);
+		eggcheck = false;
+	}
+
+for(int i=0; i<DEF.egg_COUNT; i++) {
+	// initalize gold egg
+	
+	Bird goldegg = new Bird(-3000, -3000, DEF.IMAGE.get("goldegg"));
+	goldegg.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
+	
+	goldegg.render(gc);
+	goldeggs.add(goldegg);
+	goldeggcheck = false;
+}
+
+
+
+//initialize pig
+for(int i=0; i<DEF.pig_COUNT; i++) {
+	
+	
+	Pig pig = new Pig(-3000, 0 ,DEF.IMAGE.get("pig"));
+	pig.setVelocity(DEF.SCENE_SHIFT_INCR, DEF.pig_DROP_VEL);
+	pig.render(gc);
+	pigs.add(pig);
+	pigcheck = false;
+
+}
+
+
+>>>>>>> 00e5887d388dea0daa0974428875b9a83d04c5b0
         // initialize blob
         blob = new Bird(DEF.BLOB_POS_X, DEF.BLOB_POS_Y,DEF.IMAGE.get("blob0"));
         blob.render(gc);
@@ -368,18 +430,18 @@ public class AngryFlappyBird extends Application {
     	     }
     	     
     	     if (GAME_START) {
-    	    	 // step1: update floor
+    	    	
     	    	 moveFloor();
     	    	 updatePipes();
-    	    	 //movePipes();
-    	    	 movePipes2();
-    	    	 //pigappear(DEF.pig_POS_X,DEF.pig_POS_Y);
-    	    	 // step2: update blob
+    	    	
+    	    	 //movePipes2();
+    	    	
     	    	 moveBlob();
-    	    	 //checkegg();
+    	    
     	    	 checkCollision();
-    	    	 
-    	    	 System.out.println(score);
+    	    	 updatePipes2();
+    	    	 //pigUpdate();
+    	    	 //System.out.println(score);
     	    	 
     	     }
     	 }
@@ -393,7 +455,6 @@ public class AngryFlappyBird extends Application {
     		 }
     		 
     	 }
-    	 // step1: update floor
     	 private void moveFloor() {
     		
     		for(int i=0; i<DEF.FLOOR_COUNT; i++) {
@@ -411,20 +472,29 @@ public class AngryFlappyBird extends Application {
     		for(int i=0; i<DEF.pipe_COUNT; i++) {
     			movePipes(i);
     			updateEggs(i);
-    			//whiteEggAppear(i);
+    		
     		}
     	 }
     	 	private void updateEggs(int i) {
-    	 		//whiteEggAppear(i);
+    	 	
         		eggs.get(i).render(gc);
         		goldEggs.get(i).render(gc);
         		eggs.get(i).update(DEF.SCENE_SHIFT_TIME);
+<<<<<<< HEAD
         		goldEggs.get(i).update(DEF.SCENE_SHIFT_TIME);
         		//eggs.get(i).update(DEF.SCENE_SHIFT_INCR);
+=======
+        		goldeggs.get(i).render(gc);
+       		goldeggs.get(i).update(DEF.SCENE_SHIFT_TIME);
+       		eggcheck = false;
+       		goldeggcheck = false;
+>>>>>>> 00e5887d388dea0daa0974428875b9a83d04c5b0
         	}
+    	 	
+    	 	
+    	 	
     	 private void movePipes(int i) {
-//    		 long currentTime = System.nanoTime();
-//     		for(int i=0; i<DEF.pipe_COUNT; i++) {
+
      			if (pipes.get(i).getPositionX() <= -DEF.pipe_WIDTH) {
      				passed = false;
      		
@@ -432,27 +502,38 @@ public class AngryFlappyBird extends Application {
 
      	        	double nextY = DEF.SCENE_HEIGHT -DEF.FLOOR_HEIGHT- DEF.pipe_HEIGHT;
      	        	pipes.get(i).setPositionXY(nextX, nextY);
+     	        	 
      	        	whiteEggAppear(i);
+<<<<<<< HEAD
      	        	goldEggAppear(i);
 		 	   		Random generator = new Random();
 					int randomIndex = generator.nextInt(pipeHeight.size());
 		            DEF.pipe_HEIGHT = pipeHeight.get(randomIndex);
 		           
+=======
+     	        	goldEggAppear( i); 
+     	   		Random generator = new Random();
+ 				int randomIndex = generator.nextInt(pipeHeight.size());
+                DEF.pipe_HEIGHT = pipeHeight.get(randomIndex);
+               
+>>>>>>> 00e5887d388dea0daa0974428875b9a83d04c5b0
      			}
      			
      			pipes.get(i).render(gc);
      			pipes.get(i).update(DEF.SCENE_SHIFT_TIME);
      			score(i);
-     	          
+
      		}
      		
      	 
     	 private void whiteEggAppear(int i) {
-    		 Random random = new Random();
-    		 int randomNumber = random.nextInt(15); // Generate a random number between 0 and 15
-    		 //show egg when the random number is less than 5 (33%)
-    		 if(randomNumber < 5) {
+    		 Random r = new Random();
+    		 int low = 1;
+    		 int high = 20;
+    		 int result = r.nextInt(high-low) + low;
+    		if (result %2 ==0 && goldeggcheck == false && pigcheck == false) {
 	    	    eggs.get(i).setPositionXY(pipes.get(i).getPositionX() ,pipes.get(i).getPositionY() - DEF.egg_HEIGHT);
+<<<<<<< HEAD
 	    	    eggs.get(i).render(gc);
 	    	    
     		 }
@@ -469,21 +550,86 @@ public class AngryFlappyBird extends Application {
 	    	    goldEggs.get(i).render(gc);
     		 }
 	    }
+=======
+	    	  eggcheck = true;
+    		}
+	    	
+	    	}
+    	 private void goldEggAppear(int i ) {
+    		 
+    		 Random r = new Random();
+    		 int low = 1;
+    		 int high = 50;
+    		 int result = r.nextInt(high-low) + low;
+    		    if (result% 5 == 0 && eggcheck == false && pigcheck == false ) { // Egg count is a multiple of 5
+    		      
+
+    		 
+    		
+    		            goldeggs.get(i).setPositionXY(pipes.get(i).getPositionX(), pipes.get(i).getPositionY() - DEF.egg_HEIGHT);
+    		            goldeggcheck = true;
+    		        }
+    		    }
+    		
+>>>>>>> 00e5887d388dea0daa0974428875b9a83d04c5b0
     	 
-    	 private void movePipes2() {
+    	 private void movePipes2(int i) {
       		
-      		for(int i=0; i<DEF.pipe_COUNT; i++) {
+      		
       			if (pipes2.get(i).getPositionX() <= -DEF.pipe_WIDTH) {
       				double nextX = pipes2.get((i+1)%DEF.pipe_COUNT).getPositionX() + DEF.pipe_WIDTH + 200;
       	        	double nextY = 0;
       	        	pipes2.get(i).setPositionXY(nextX, nextY);
+<<<<<<< HEAD
+=======
+      	        	pigappear( i);
+      	      
+>>>>>>> 00e5887d388dea0daa0974428875b9a83d04c5b0
       			}
       			
       			pipes2.get(i).render(gc);
       			pipes2.get(i).update(DEF.SCENE_SHIFT_TIME);
-      		}
+      		
+      	
       	 }
      	 
+     	 public void pigappear(int i) {
+     		
+
+     		 Random r = new Random();
+    		 int low = 1;
+    		 int high = 50;
+    		 int result = r.nextInt(high-low) + low;
+         
+     		if (result %4 ==0 && goldeggcheck == false && eggcheck ==false) {
+	    	   pigs.get(i).setPositionXY(pipes.get(i).getPositionX() ,0);
+	    	  pigcheck = true;
+    		}
+    
+
+     
+   
+ 
+
+    	 } 
+     	 
+     	 
+ public void pigUpdate(int i) {
+	 
+		pigs.get(i).setVelocity(DEF.SCENE_SHIFT_INCR, DEF.pig_DROP_VEL);
+	    pigs.get(i).update(DEF.SCENE_SHIFT_TIME);
+	    pigs.get(i).render(gc);
+	    pigcheck = false;
+	     		 
+    	 }
+ private void updatePipes2() {
+		for(int i=0; i<DEF.pipe_COUNT; i++) {
+			movePipes2(i);
+			pigUpdate(i);
+		
+		}
+	 }
+    	 
     	 // step2: update blob
     	 private void moveBlob() {
     		 
@@ -531,7 +677,9 @@ public class AngryFlappyBird extends Application {
 			 for (Pipe pipe2 : pipes2) {
 				 GAME_OVER = GAME_OVER || blob.intersectsSprite(pipe2);
 			    }
-	
+			 for (Pig pig : pigs) {
+				 GAME_OVER = GAME_OVER || blob.intersectsSprite(pig);
+			    }
 			if (GAME_OVER) {
 		        showHitEffect();
 		        for (Bird floor : floors) {
@@ -543,6 +691,9 @@ public class AngryFlappyBird extends Application {
 		        for (Pipe pipes2 : pipes2) {
 		            pipes2.setVelocity(0, 0);
 		        }
+//		        for (Pig pig : pigs) {
+//		            pigs.setVelocity(0, 0);
+//		        }
 		        timer.stop();
 		    }
 			
@@ -556,10 +707,18 @@ public class AngryFlappyBird extends Application {
                  if(blob.intersectsSprite(egg)) {
                      // taking egg out of scene
                      egg.setPositionXY(-3000, -3000);
+<<<<<<< HEAD
                     egg.render(gc);
                     eggcheck = true;
                     //adds 5 points when bird collides with the white egg
                     score += 5;
+=======
+                     
+                    egg.render(gc);
+                 score = score +5;
+                    //eggcheck = true;
+            
+>>>>>>> 00e5887d388dea0daa0974428875b9a83d04c5b0
                  }
     		 }
     		 for (Bird goldEgg:goldEggs) {
@@ -607,12 +766,16 @@ public class AngryFlappyBird extends Application {
 				 snoozingTime.setVisible(false);
 			 }
     	 }
+<<<<<<< HEAD
     	 public void pigappear(int i) {
     		pig.setPositionXY(pipes2.get(i).getPositionX(), pipes2.get(i).getPositionY());
     		pig.setVelocity(0, DEF.pig_DROP_VEL);
     		pig.render(gc);
     	 }
     	 
+=======
+   
+>>>>>>> 00e5887d388dea0daa0974428875b9a83d04c5b0
 	     private void showHitEffect() {
 	        ParallelTransition parallelTransition = new ParallelTransition();
 	        FadeTransition fadeTransition = new FadeTransition(Duration.seconds(DEF.TRANSITION_TIME), gameScene);
