@@ -310,6 +310,15 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
 }
 
 
+<<<<<<< HEAD
+=======
+pig = new Pig(-3000, 0 ,DEF.IMAGE.get("pig"));
+//pig.setVelocity(sceneVelocity, pigDropVelocity);z
+//pig.render(gc);
+	//Y postion randomized 
+	//array lit 
+        
+>>>>>>> 05d061acccdecd521e0eb214f527caeb4260e70b
         // initialize blob
         blob = new Bird(DEF.BLOB_POS_X, DEF.BLOB_POS_Y,DEF.IMAGE.get("blob0"));
         blob.render(gc);
@@ -413,27 +422,41 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
 
      	        	double nextY = DEF.SCENE_HEIGHT -DEF.FLOOR_HEIGHT- DEF.pipe_HEIGHT;
      	        	pipes.get(i).setPositionXY(nextX, nextY);
-     	        	 whiteEggAppear(i);
-     	   		Random generator = new Random();
- 				int randomIndex = generator.nextInt(pipeHeight.size());
-                DEF.pipe_HEIGHT = pipeHeight.get(randomIndex);
-               
+     	        	whiteEggAppear(i);
+		 	   		Random generator = new Random();
+					int randomIndex = generator.nextInt(pipeHeight.size());
+		            DEF.pipe_HEIGHT = pipeHeight.get(randomIndex);
+		           
      			}
      			
      			pipes.get(i).render(gc);
      			pipes.get(i).update(DEF.SCENE_SHIFT_TIME);
      			score(i);
+<<<<<<< HEAD
 
+=======
+     	          
+>>>>>>> 05d061acccdecd521e0eb214f527caeb4260e70b
      		}
      		
      	 
     	 private void whiteEggAppear(int i) {
+<<<<<<< HEAD
     		 
     		if (eggcount %2 ==0) {
 	    	    eggs.get(i).setPositionXY(pipes.get(i).getPositionX() ,pipes.get(i).getPositionY() - DEF.egg_HEIGHT);
 	    	  
     		}
 	    	
+=======
+    		 Random random = new Random();
+    		 int randomNumber = random.nextInt(15); // Generate a random number between 0 and 15
+    		 //show egg when the random number is less than 5 (33%)
+    		 if(randomNumber < 5) {
+	    	    eggs.get(i).setPositionXY(pipes.get(i).getPositionX() ,pipes.get(i).getPositionY() - DEF.egg_HEIGHT);
+	    	    eggs.get(i).render(gc);
+    		 }
+>>>>>>> 05d061acccdecd521e0eb214f527caeb4260e70b
 	    	}
    
     	 
@@ -580,7 +603,7 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
                  if(blob.intersectsSprite(egg)) {
                      // taking egg out of scene
                      egg.setPositionXY(-3000, -3000);
-                     
+                     score =score +5;
                     egg.render(gc);
                  score = score +5;
                     eggcheck = true;
