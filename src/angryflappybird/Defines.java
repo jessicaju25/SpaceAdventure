@@ -62,8 +62,9 @@ public class Defines {
    final int pig_POS_Y = 200;
    final int pig_DROP_TIME = 300000000;  
    final int pig_COUNT = 1;
-   double pig_DROP_VEL = 0.5;    		
+   double pig_DROP_VEL = 0.9;    		
    final int pig_IMG_LEN = 1;
+//   final long pig_APPERANCE = 10_000_000_000L;
  
 
    
@@ -106,6 +107,7 @@ public class Defines {
     Button easyButton;
     Button mediumButton;
     Button hardButton;
+    Button playagain;
         
     // constructor
 	Defines() {
@@ -164,6 +166,7 @@ public class Defines {
 		easyButton = new Button("Easy");
 		mediumButton = new Button("Medium");
 		hardButton = new Button("Hard");
+		playagain = new Button("Play Again?");
 	}
 	
 	public String pathImage(String filepath) {
