@@ -61,7 +61,7 @@ public class Defines {
    final int pig_POS_X = 70;
    final int pig_POS_Y = 200;
    final int pig_DROP_TIME = 300000000;  
-   final int pig_COUNT = 1;
+   final int pig_COUNT = 5;
    double pig_DROP_VEL = 0.5;    		
    final int pig_IMG_LEN = 1;
  
