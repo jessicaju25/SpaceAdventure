@@ -80,7 +80,7 @@ public class AngryFlappyBird extends Application {
     Text snoozingTime;
     private long snoozingStartTime, backingStartTime;   
     private boolean checkSnoozing = false;
-    boolean snoozSwitch = false;
+    boolean snoozeSwitch = false;
     
     
 	// the mandatory main method 
@@ -588,7 +588,7 @@ public class AngryFlappyBird extends Application {
 						 blob.setPositionXY(blob.getPositionX(), blob.getPositionY() + 1);
 					 }
 					 else {
-						 if(!snoozSwitch) {
+						 if(!snoozeSwitch) {
 								blob.setPositionXY(blob.getPositionX(), blob.getPositionY()- 0.15);
 							} else {
 								blob.setPositionXY(blob.getPositionX(), blob.getPositionY()+ 0.15);
@@ -603,7 +603,7 @@ public class AngryFlappyBird extends Application {
 			 else {
 				 // updating boolean flags
 				 checkSnoozing = false;
-				 snoozSwitch = false;
+				 snoozeSwitch = false;
 				 snoozingTime.setVisible(false);
 			 }
     	 }
