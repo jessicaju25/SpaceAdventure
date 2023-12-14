@@ -300,10 +300,10 @@ public class AngryFlappyBird extends Application {
     		pipe.render(gc);
     		
     		pipes.add(pipe);
-<<<<<<< HEAD
-=======
-    		//System.out.println("This is pipe " + i +" "+ pipes.get(i).getPositionX());
->>>>>>> 00e5887d388dea0daa0974428875b9a83d04c5b0
+//<<<<<<< HEAD
+//=======
+//    		//System.out.println("This is pipe " + i +" "+ pipes.get(i).getPositionX());
+//>>>>>>> 00e5887d388dea0daa0974428875b9a83d04c5b0
     	
     	}
     	
@@ -359,17 +359,17 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
 }
 
 
-<<<<<<< HEAD
-//
-//pig = new Pig(-3000, 0 ,DEF.IMAGE.get("pig"));
-////pig.setVelocity(sceneVelocity, pigDropVelocity);z
-////pig.render(gc);
-//	//Y postion randomized 
-//	//array lit 
-//        
-//>>>>>>> 05d061acccdecd521e0eb214f527caeb4260e70b
-=======
->>>>>>> 00e5887d388dea0daa0974428875b9a83d04c5b0
+//<<<<<<< HEAD
+////
+////pig = new Pig(-3000, 0 ,DEF.IMAGE.get("pig"));
+//////pig.setVelocity(sceneVelocity, pigDropVelocity);z
+//////pig.render(gc);
+////	//Y postion randomized 
+////	//array lit 
+////        
+////>>>>>>> 05d061acccdecd521e0eb214f527caeb4260e70b
+//=======
+//>>>>>>> 00e5887d388dea0daa0974428875b9a83d04c5b0
         // initialize blob
         blob = new Bird(DEF.BLOB_POS_X, DEF.BLOB_POS_Y,DEF.IMAGE.get("blob0"));
         blob.render(gc);
@@ -422,15 +422,9 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
     	    	 moveBlob();
     	    
     	    	 checkCollision();
-<<<<<<< HEAD
-    	    
-    	    	 pigUpdate();
-//    	    	 System.out.println(score);
-=======
+
     	    	 updatePipes2();
-    	    	 //pigUpdate();
-    	    	 //System.out.println(score);
->>>>>>> 00e5887d388dea0daa0974428875b9a83d04c5b0
+   
     	    	 
     	     }
     	 }
@@ -497,35 +491,35 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
      			pipes.get(i).render(gc);
      			pipes.get(i).update(DEF.SCENE_SHIFT_TIME);
      			score(i);
-<<<<<<< HEAD
+//<<<<<<< HEAD
 //<<<<<<< HEAD
 //
 //=======
 //     	          
 //>>>>>>> 05d061acccdecd521e0eb214f527caeb4260e70b
-=======
+//=======
 
->>>>>>> 00e5887d388dea0daa0974428875b9a83d04c5b0
+//>>>>>>> 00e5887d388dea0daa0974428875b9a83d04c5b0
      		}
      		
      	 
     	 private void whiteEggAppear(int i) {
-<<<<<<< HEAD
+//<<<<<<< HEAD
 //<<<<<<< HEAD
     		 
     		if (eggcount %2 ==0) {
-=======
+//=======
     		 Random r = new Random();
     		 int low = 1;
     		 int high = 20;
     		 int result = r.nextInt(high-low) + low;
     		if (result %2 ==0 && goldeggcheck == false && pigcheck == false) {
->>>>>>> 00e5887d388dea0daa0974428875b9a83d04c5b0
+//>>>>>>> 00e5887d388dea0daa0974428875b9a83d04c5b0
 	    	    eggs.get(i).setPositionXY(pipes.get(i).getPositionX() ,pipes.get(i).getPositionY() - DEF.egg_HEIGHT);
 	    	  eggcheck = true;
     		}
 	    	
-<<<<<<< HEAD
+//<<<<<<< HEAD
 //=======
     		 Random random = new Random();
     		 int randomNumber = random.nextInt(15); // Generate a random number between 0 and 15
@@ -534,9 +528,10 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
 	    	    eggs.get(i).setPositionXY(pipes.get(i).getPositionX() ,pipes.get(i).getPositionY() - DEF.egg_HEIGHT);
 	    	    eggs.get(i).render(gc);
     		 }
+    		}
 //>>>>>>> 05d061acccdecd521e0eb214f527caeb4260e70b
-=======
->>>>>>> 00e5887d388dea0daa0974428875b9a83d04c5b0
+//=======
+//>>>>>>> 00e5887d388dea0daa0974428875b9a83d04c5b0
 	    	}
     	 private void goldEggAppear(int i ) {
     		 
@@ -574,7 +569,7 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
       	 }
      	 
      	 public void pigappear(int i) {
-<<<<<<< HEAD
+//<<<<<<< HEAD
 //     		
      		 
      		if (pigs.get(i).getPositionX() < -20) {
@@ -599,8 +594,8 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
      	 } 
 
 
- public void pigUpdate() {
-=======
+ public void pigUpdate(int i) {
+//=======
      		
 
      		 Random r = new Random();
@@ -621,15 +616,15 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
     	 } 
      	 
      	 
- public void pigUpdate(int i) {
->>>>>>> 00e5887d388dea0daa0974428875b9a83d04c5b0
-	 
-		pigs.get(i).setVelocity(DEF.SCENE_SHIFT_INCR, DEF.pig_DROP_VEL);
-	    pigs.get(i).update(DEF.SCENE_SHIFT_TIME);
-	    pigs.get(i).render(gc);
-	    pigcheck = false;
-	     		 
-    	 }
+// public void pigUpdate(int i) {
+////>>>>>>> 00e5887d388dea0daa0974428875b9a83d04c5b0
+//	 
+//		pigs.get(i).setVelocity(DEF.SCENE_SHIFT_INCR, DEF.pig_DROP_VEL);
+//	    pigs.get(i).update(DEF.SCENE_SHIFT_TIME);
+//	    pigs.get(i).render(gc);
+//	    pigcheck = false;
+//	     		 
+//    	 }
  private void updatePipes2() {
 		for(int i=0; i<DEF.pipe_COUNT; i++) {
 			movePipes2(i);
