@@ -61,11 +61,17 @@ public class Defines {
    final int pig_HEIGHT = 70;
    final int pig_POS_X = 70;
    final int pig_POS_Y = 200;
+<<<<<<< HEAD
 
    final int pig_DROP_TIME = 100000000;  
    final int pig_COUNT = 5;
    double pig_DROP_VEL = 0.4;    		
 
+=======
+   final int pig_DROP_TIME = 300000000;  
+   final int pig_COUNT = 5;
+   double pig_DROP_VEL = 0.5;    		
+>>>>>>> parent of e60b1d6 (code)
    final int pig_IMG_LEN = 1;
 //   final long pig_APPERANCE = 10_000_000_000L;
  
@@ -73,7 +79,11 @@ public class Defines {
    
    
     // coefficients related to time
+<<<<<<< HEAD
     final int SCENE_SHIFT_TIME = 7;
+=======
+    final int SCENE_SHIFT_TIME = 5;
+>>>>>>> parent of e60b1d6 (code)
     final double SCENE_SHIFT_INCR = -0.4;
     final double NANOSEC_TO_SEC = 1.0 / 1000000000.0;
     final double TRANSITION_TIME = 0.1;

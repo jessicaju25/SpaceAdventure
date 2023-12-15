@@ -78,16 +78,7 @@ public class AngryFlappyBird extends Application {
 
     private boolean goldeggcheck;
     private boolean pigcheck;
-    private boolean snoozecheck;
     private MediaPlayer backgroundMusic;
-    private MediaPlayer bonusPoints;
-	private int randomIndex;
-	private long snoozeStartTime;
-	private int goldEggfreq = 3; 
-	private int whiteEggfreq = 5;
-	private boolean bonusSoundPlayed;
-	private long lastPigAppearanceTime = 0;
-	private final long pigAppearanceInterval = 20 * 1_000_000_000L;
     Text scoreText;
     
     private boolean isBounce;
@@ -264,8 +255,8 @@ public class AngryFlappyBird extends Application {
 //        scoreText.setText("Score: " + score);
         livesText.setText("Lives: " + lives);
      
-        snoozecheck = false;
-        bonusSoundPlayed = false;
+        
+        
         
         
         
@@ -488,7 +479,7 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
      	        	whiteEggAppear(i);
      	        	goldEggAppear( i); 
      	   		Random generator = new Random();
- 				 randomIndex = generator.nextInt(pipeHeight.size());
+ 				int randomIndex = generator.nextInt(pipeHeight.size());
                 DEF.pipe_HEIGHT = pipeHeight.get(randomIndex);
                
 
@@ -502,6 +493,7 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
      		
      	 
     	 private void whiteEggAppear(int i) {
+<<<<<<< HEAD
 
     		  Random r = new Random();
     		    int result = r.nextInt(20); 
@@ -511,15 +503,32 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
     		        eggcheck = true;
     		    }
     	 }
+=======
+    		 Random r = new Random();
+    		 int low = 1;
+    		 int high = 20;
+    		 int result = r.nextInt(high-low) + low;
+    		if (result %2 ==0 && goldeggcheck == false && pigcheck == false) {
+	    	    eggs.get(i).setPositionXY(pipes.get(i).getPositionX() ,pipes.get(i).getPositionY() - DEF.egg_HEIGHT);
+	    	  eggcheck = true;
+    		}
+	    	
+	    	}
+>>>>>>> parent of e60b1d6 (code)
     	 private void goldEggAppear(int i ) {
     		 
-    		  Random r = new Random();
-    		    int result = r.nextInt(20); 
+    		 Random r = new Random();
+    		 int low = 1;
+    		 int high = 50;
+    		 int result = r.nextInt(high-low) + low;
+    		    if (result% 5 == 0 && eggcheck == false && pigcheck == false ) { // Egg count is a multiple of 5
+    		      
 
-    		    if (result < goldEggfreq && eggcheck == false && pigcheck == false) {
-    		        goldeggs.get(i).setPositionXY(pipes.get(i).getPositionX(), pipes.get(i).getPositionY() - DEF.egg_HEIGHT);
-    		        goldeggcheck = true;
-    		    }
+    		 
+    		
+    		            goldeggs.get(i).setPositionXY(pipes.get(i).getPositionX(), pipes.get(i).getPositionY() - DEF.egg_HEIGHT);
+    		            goldeggcheck = true;
+    		        }
     		    }
     		
 
@@ -545,12 +554,15 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
      	 public void pigappear(int i) {
 
      		
-     		long currentTime = System.nanoTime();
 
-     	    if (currentTime - lastPigAppearanceTime >= pigAppearanceInterval && goldeggcheck == false && eggcheck == false) {
+     		 Random r = new Random();
+    		 int low = 1;
+    		 int high = 50;
+    		 int result = r.nextInt(high-low) + low;
+         
+     		if (result %4 ==0 && goldeggcheck == false && eggcheck ==false) {
 	    	   pigs.get(i).setPositionXY(pipes.get(i).getPositionX() ,0);
 	    	  pigcheck = true;
-	    	  lastPigAppearanceTime = currentTime;
     		}
     
 
@@ -576,8 +588,11 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
 			long diffTime = System.nanoTime() - clickTime;
 			
 			// blob flies upward with animation
+<<<<<<< HEAD
 			//if (isBounce == false ) {
 			if (snoozecheck == false ) {
+=======
+>>>>>>> parent of e60b1d6 (code)
 			if (CLICKED && diffTime <= DEF.BLOB_DROP_TIME) {
 				
 				int imageIndex = Math.floorDiv(counter++, DEF.BLOB_IMG_PERIOD);
@@ -591,6 +606,7 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
 			    CLICKED = false;
 			}
 
+<<<<<<< HEAD
 			}
 			
 			else {
@@ -612,22 +628,27 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
 			}
 
 
+=======
+>>>>>>> parent of e60b1d6 (code)
 			// render blob on GUI
 			blob.update(elapsedTime * DEF.NANOSEC_TO_SEC);
 			blob.render(gc);
-    	 
-    	 
     	 }
+<<<<<<< HEAD
     	// }
+=======
+    	 
+    	 
+
+>>>>>>> parent of e60b1d6 (code)
     	 
     	 
     	 
     	 
     	 // possibly condense this code and also look into cropping the pipe image 
     	 public void checkCollision() {
-    		 checkgoldegg();
+    		 
     		 checkegg();
-    		 pigCollectsEgg();
 			for (Bird floor: floors) {
 			    if ( blob.intersectsSprite(floor)) {
                     lives--;
@@ -636,6 +657,7 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
                 }
 			}
 			 for (Pipe pipe : pipes) {
+<<<<<<< HEAD
 //<<<<<<< HEAD
 				 if(snoozecheck==false ) {
 					    if ( blob.intersectsSprite(pipe)) {
@@ -662,6 +684,14 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
 			    
 			
 
+=======
+				 GAME_OVER = GAME_OVER || blob.intersectsSprite(pipe);
+			    }
+			 
+			 for (Pipe pipe2 : pipes2) {
+				 GAME_OVER = GAME_OVER || blob.intersectsSprite(pipe2);
+			    }
+>>>>>>> parent of e60b1d6 (code)
 			 for (Pig pig : pigs) {
 			     if ( blob.intersectsSprite(pig)) {
 //			         bounceBack();
@@ -677,11 +707,17 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
 		            floor.setVelocity(0, 0);
 		        }
 		        for (Pipe pipe : pipes) {
+<<<<<<< HEAD
 		        	
 		            pipe.setVelocity(0, 0);
 		        }
 		        for (Pipe pipes2 : pipes2) {
 		        	
+=======
+		            pipe.setVelocity(0, 0);
+		        }
+		        for (Pipe pipes2 : pipes2) {
+>>>>>>> parent of e60b1d6 (code)
 		            pipes2.setVelocity(0, 0);
 		        }
 //		        
@@ -726,14 +762,14 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
     	
 
     	 public void checkegg() {
-    
+    		 
     		 for (Bird egg: eggs) {
                  if(blob.intersectsSprite(egg)) {
-                	 
-                     
+                     // taking egg out of scene
                      egg.setPositionXY(-3000, -3000);
                   
                     egg.render(gc);
+<<<<<<< HEAD
 
                  score = score +3;
                  
@@ -741,12 +777,15 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
                
                  
 
+=======
+                 score = score +5;
+                    //eggcheck = true;
+>>>>>>> parent of e60b1d6 (code)
             
                  }
     	 }
-    		 
-    		 
     	 }
+<<<<<<< HEAD
     	 
 
    
@@ -830,6 +869,9 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
     }
     
   
+=======
+   
+>>>>>>> parent of e60b1d6 (code)
 	     private void showHitEffect() {
 	        ParallelTransition parallelTransition = new ParallelTransition();
 	        FadeTransition fadeTransition = new FadeTransition(Duration.seconds(DEF.TRANSITION_TIME), gameScene);
