@@ -63,11 +63,17 @@ public class Defines {
    final int pig_POS_Y = 200;
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 
    final int pig_DROP_TIME = 100000000;  
    final int pig_COUNT = 5;
    double pig_DROP_VEL = 0.4;    		
 
+=======
+   final int pig_DROP_TIME = 300000000;  
+   final int pig_COUNT = 5;
+   double pig_DROP_VEL = 0.5;    		
+>>>>>>> parent of e60b1d6 (code)
 =======
    final int pig_DROP_TIME = 300000000;  
    final int pig_COUNT = 5;
@@ -87,7 +93,11 @@ public class Defines {
     // coefficients related to time
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     final int SCENE_SHIFT_TIME = 7;
+=======
+    final int SCENE_SHIFT_TIME = 5;
+>>>>>>> parent of e60b1d6 (code)
 =======
     final int SCENE_SHIFT_TIME = 5;
 >>>>>>> parent of e60b1d6 (code)
