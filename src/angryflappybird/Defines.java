@@ -24,10 +24,11 @@ public class Defines {
     final int BLOB_POS_X = 70;
     final int BLOB_POS_Y = 200;
     final int BLOB_DROP_TIME = 300000000;  	// the elapsed time threshold before the blob starts dropping
-    final int BLOB_DROP_VEL = 50;    		// the blob drop velocity    //change to 50 from 300
-    final int BLOB_FLY_VEL = -40;
+    final int BLOB_DROP_VEL = 70;    		// the blob drop velocity    //change to 50 from 300
+    final int BLOB_FLY_VEL = -70;
     final int BLOB_IMG_LEN = 4;
     final int BLOB_IMG_PERIOD = 5;
+    final int BLOB_BB_VEL = 200; //bounce back
     
     // coefficients related to the floors
     final int FLOOR_WIDTH = 400;
@@ -60,17 +61,33 @@ public class Defines {
    final int pig_HEIGHT = 70;
    final int pig_POS_X = 70;
    final int pig_POS_Y = 200;
+<<<<<<< HEAD
    final int pig_DROP_TIME = 100000000;  
    final int pig_COUNT = 5;
    double pig_DROP_VEL = 0.4;    		
+=======
+   final int pig_DROP_TIME = 300000000;  
+//<<<<<<< HEAD
+   final int pig_COUNT = 1;
+   double pig_DROP_VEL = 0.9;    		
+//=======
+//   final int pig_COUNT = 5;
+//   double pig_DROP_VEL = 0.5;    		
+//>>>>>>> 00e5887d388dea0daa0974428875b9a83d04c5b0
+>>>>>>> 532765dac7bff3ab231b16550cef25339803ad97
    final int pig_IMG_LEN = 1;
+//   final long pig_APPERANCE = 10_000_000_000L;
  
 
    
    
     // coefficients related to time
     final int SCENE_SHIFT_TIME = 7;
+<<<<<<< HEAD
     final double SCENE_SHIFT_INCR = -0.5;
+=======
+    final double SCENE_SHIFT_INCR = -0.4;
+>>>>>>> 532765dac7bff3ab231b16550cef25339803ad97
     final double NANOSEC_TO_SEC = 1.0 / 1000000000.0;
     final double TRANSITION_TIME = 0.1;
     final int TRANSITION_CYCLE = 2;
@@ -106,6 +123,7 @@ public class Defines {
     Button easyButton;
     Button mediumButton;
     Button hardButton;
+    Button playagain;
         
     // constructor
 	Defines() {
@@ -164,6 +182,7 @@ public class Defines {
 		easyButton = new Button("Easy");
 		mediumButton = new Button("Medium");
 		hardButton = new Button("Hard");
+		playagain = new Button("Play Again?");
 	}
 	
 	public String pathImage(String filepath) {
