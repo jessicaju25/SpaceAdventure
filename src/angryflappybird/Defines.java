@@ -24,11 +24,10 @@ public class Defines {
     final int BLOB_POS_X = 70;
     final int BLOB_POS_Y = 200;
     final int BLOB_DROP_TIME = 300000000;  	// the elapsed time threshold before the blob starts dropping
-    final int BLOB_DROP_VEL = 70;    		// the blob drop velocity    //change to 50 from 300
-    final int BLOB_FLY_VEL = -70;
+    final int BLOB_DROP_VEL = 50;    		// the blob drop velocity    //change to 50 from 300
+    final int BLOB_FLY_VEL = -40;
     final int BLOB_IMG_LEN = 4;
     final int BLOB_IMG_PERIOD = 5;
-    final int BLOB_BB_VEL = 200; //bounce back
     
     // coefficients related to the floors
     final int FLOOR_WIDTH = 400;
@@ -61,49 +60,16 @@ public class Defines {
    final int pig_HEIGHT = 70;
    final int pig_POS_X = 70;
    final int pig_POS_Y = 200;
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-   final int pig_DROP_TIME = 100000000;  
+   final int pig_DROP_TIME = 00000000;  
    final int pig_COUNT = 5;
-   double pig_DROP_VEL = 0.4;    		
-
-=======
-   final int pig_DROP_TIME = 300000000;  
-   final int pig_COUNT = 5;
-   double pig_DROP_VEL = 0.5;    		
->>>>>>> parent of e60b1d6 (code)
-=======
-   final int pig_DROP_TIME = 300000000;  
-   final int pig_COUNT = 5;
-   double pig_DROP_VEL = 0.5;    		
->>>>>>> parent of e60b1d6 (code)
-=======
-   final int pig_DROP_TIME = 300000000;  
-   final int pig_COUNT = 5;
-   double pig_DROP_VEL = 0.5;    		
->>>>>>> parent of e60b1d6 (code)
+   double pig_DROP_VEL = 0.24;    		
    final int pig_IMG_LEN = 1;
-//   final long pig_APPERANCE = 10_000_000_000L;
  
 
    
    
     // coefficients related to time
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-    final int SCENE_SHIFT_TIME = 7;
-=======
-    final int SCENE_SHIFT_TIME = 5;
->>>>>>> parent of e60b1d6 (code)
-=======
-    final int SCENE_SHIFT_TIME = 5;
->>>>>>> parent of e60b1d6 (code)
-=======
-    final int SCENE_SHIFT_TIME = 5;
->>>>>>> parent of e60b1d6 (code)
+    int SCENE_SHIFT_TIME = 5;
     final double SCENE_SHIFT_INCR = -0.4;
     final double NANOSEC_TO_SEC = 1.0 / 1000000000.0;
     final double TRANSITION_TIME = 0.1;
@@ -114,7 +80,7 @@ public class Defines {
 	private final String IMAGE_DIR = "../resources/images/";
 
 
-    final String[] IMAGE_FILES = {"background","background0" , "blob0", "blob1", "blob2", "blob3", "floor","pipe","pipe2", "whiteegg","whiteegg","goldegg", "pig"};
+    final String[] IMAGE_FILES = {"background","background0" , "blob0", "blob1", "blob2", "blob3", "floor","pipe","pipe2", "whiteegg","whiteegg","goldegg", "pig", "blobf"};
 
 
 
@@ -151,7 +117,7 @@ public class Defines {
 			if (i == 6) {
 				img = new Image(pathImage(IMAGE_FILES[i]), FLOOR_WIDTH, FLOOR_HEIGHT,  false, false);
 			}
-			else if (i == 2 || i == 3 || i == 4 || i == 5){
+			else if (i == 2 || i == 3 || i == 4 || i == 5 || i ==13){
 				img = new Image(pathImage(IMAGE_FILES[i]), BLOB_WIDTH, BLOB_HEIGHT, false, false);
 			}
 			
@@ -199,7 +165,7 @@ public class Defines {
 		easyButton = new Button("Easy");
 		mediumButton = new Button("Medium");
 		hardButton = new Button("Hard");
-		playagain = new Button("Play Again?");
+		playagain = new Button ("Play again?");
 	}
 	
 	public String pathImage(String filepath) {
