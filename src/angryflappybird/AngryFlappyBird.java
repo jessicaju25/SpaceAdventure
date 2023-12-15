@@ -76,7 +76,16 @@ public class AngryFlappyBird extends Application {
     private boolean  eggcheck;
     private boolean goldeggcheck;
     private boolean pigcheck;
+    private boolean snoozecheck;
     private MediaPlayer backgroundMusic;
+    private MediaPlayer bonusPoints;
+	private int randomIndex;
+	private long snoozeStartTime;
+	private int goldEggfreq = 3; 
+	private int whiteEggfreq = 5;
+	private boolean bonusSoundPlayed;
+	private long lastPigAppearanceTime = 0;
+	private final long pigAppearanceInterval = 20 * 1_000_000_000L;
     Text scoreText;
     
     
@@ -227,8 +236,8 @@ public class AngryFlappyBird extends Application {
         pipecount = 1;
         eggcount =0;
      
-        
-        
+        snoozecheck = false;
+        bonusSoundPlayed = false;
         
         
         
@@ -443,7 +452,7 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
      	        	whiteEggAppear(i);
      	        	goldEggAppear( i); 
      	   		Random generator = new Random();
- 				int randomIndex = generator.nextInt(pipeHeight.size());
+ 				 randomIndex = generator.nextInt(pipeHeight.size());
                 DEF.pipe_HEIGHT = pipeHeight.get(randomIndex);
                
      			}
@@ -456,30 +465,24 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
      		
      	 
     	 private void whiteEggAppear(int i) {
-    		 Random r = new Random();
-    		 int low = 1;
-    		 int high = 20;
-    		 int result = r.nextInt(high-low) + low;
-    		if (result %2 ==0 && goldeggcheck == false && pigcheck == false) {
-	    	    eggs.get(i).setPositionXY(pipes.get(i).getPositionX() ,pipes.get(i).getPositionY() - DEF.egg_HEIGHT);
-	    	  eggcheck = true;
-    		}
+    		  Random r = new Random();
+    		    int result = r.nextInt(20); 
+
+    		    if (result < whiteEggfreq && goldeggcheck == false && pigcheck == false) {
+    		        eggs.get(i).setPositionXY(pipes.get(i).getPositionX(), pipes.get(i).getPositionY() - DEF.egg_HEIGHT);
+    		        eggcheck = true;
+    		    }
 	    	
 	    	}
     	 private void goldEggAppear(int i ) {
     		 
-    		 Random r = new Random();
-    		 int low = 1;
-    		 int high = 50;
-    		 int result = r.nextInt(high-low) + low;
-    		    if (result% 5 == 0 && eggcheck == false && pigcheck == false ) { // Egg count is a multiple of 5
-    		      
+    		  Random r = new Random();
+    		    int result = r.nextInt(20); 
 
-    		 
-    		
-    		            goldeggs.get(i).setPositionXY(pipes.get(i).getPositionX(), pipes.get(i).getPositionY() - DEF.egg_HEIGHT);
-    		            goldeggcheck = true;
-    		        }
+    		    if (result < goldEggfreq && eggcheck == false && pigcheck == false) {
+    		        goldeggs.get(i).setPositionXY(pipes.get(i).getPositionX(), pipes.get(i).getPositionY() - DEF.egg_HEIGHT);
+    		        goldeggcheck = true;
+    		    }
     		    }
     		
     	 
@@ -503,15 +506,12 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
      	 
      	 public void pigappear(int i) {
      		
+     		long currentTime = System.nanoTime();
 
-     		 Random r = new Random();
-    		 int low = 1;
-    		 int high = 50;
-    		 int result = r.nextInt(high-low) + low;
-         
-     		if (result %4 ==0 && goldeggcheck == false && eggcheck ==false) {
+     	    if (currentTime - lastPigAppearanceTime >= pigAppearanceInterval && goldeggcheck == false && eggcheck == false) {
 	    	   pigs.get(i).setPositionXY(pipes.get(i).getPositionX() ,0);
 	    	  pigcheck = true;
+	    	  lastPigAppearanceTime = currentTime;
     		}
     
 
@@ -544,6 +544,8 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
 			long diffTime = System.nanoTime() - clickTime;
 			
 			// blob flies upward with animation
+			
+			if (snoozecheck == false ) {
 			if (CLICKED && diffTime <= DEF.BLOB_DROP_TIME) {
 				
 				int imageIndex = Math.floorDiv(counter++, DEF.BLOB_IMG_PERIOD);
@@ -556,13 +558,17 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
 			    blob.setVelocity(0, DEF.BLOB_DROP_VEL); 
 			    CLICKED = false;
 			}
-
+			}
+			
+			else {
+				snooze();
+			}
 			// render blob on GUI
 			blob.update(elapsedTime * DEF.NANOSEC_TO_SEC);
 			blob.render(gc);
+    	 
+    	 
     	 }
-    	 
-    	 
 
     	 
     	 
@@ -570,18 +576,23 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
     	 
     	 // possibly condense this code and also look into cropping the pipe image 
     	 public void checkCollision() {
-    		 
+    		 checkgoldegg();
     		 checkegg();
+    		 pigCollectsEgg();
 			for (Bird floor: floors) {
 				GAME_OVER = GAME_OVER || blob.intersectsSprite(floor);
 			}
 			 for (Pipe pipe : pipes) {
+				 if(snoozecheck==false ) {
 				 GAME_OVER = GAME_OVER || blob.intersectsSprite(pipe);
+				 }
 			    }
 			 
 			 for (Pipe pipe2 : pipes2) {
+				 if(snoozecheck==false ) {
 				 GAME_OVER = GAME_OVER || blob.intersectsSprite(pipe2);
 			    }
+			 }
 			 for (Pig pig : pigs) {
 				 GAME_OVER = GAME_OVER || blob.intersectsSprite(pig);
 			    }
@@ -591,9 +602,11 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
 		            floor.setVelocity(0, 0);
 		        }
 		        for (Pipe pipe : pipes) {
+		        	 bounceback();
 		            pipe.setVelocity(0, 0);
 		        }
 		        for (Pipe pipes2 : pipes2) {
+		        	 bounceback();
 		            pipes2.setVelocity(0, 0);
 		        }
 //		        for (Pig pig : pigs) {
@@ -608,20 +621,106 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
     	 }
     	 
     	 public void checkegg() {
-    		 
+    
     		 for (Bird egg: eggs) {
                  if(blob.intersectsSprite(egg)) {
-                     // taking egg out of scene
+                	 
+                     
                      egg.setPositionXY(-3000, -3000);
                      
                     egg.render(gc);
-                 score = score +5;
-                    //eggcheck = true;
+                 score = score +3;
+                 
             
                  }
     	 }
+    		 
+    		 
     	 }
+    	 
    
+ public void checkgoldegg() {
+    		 
+	 for (Bird egg : goldeggs) {
+	        if (blob.intersectsSprite(egg)) {
+	    
+	            snoozecheck = true;
+	            snoozeStartTime = System.nanoTime();
+	            egg.setPositionXY(-3000, -3000);
+	            egg.render(gc);
+	         
+	            }
+ }
+	 }
+ 
+ public void pigCollectsEgg() {
+	
+		 for(Pig pig : pigs) {
+			 for (Bird egg : goldeggs) {
+	        if (pig.intersectsSprite(egg)) {
+	        	egg.setPositionXY(-3000, -3000);
+                
+                egg.render(gc);
+	        	score= score -3;
+	        }
+	        }
+	        }
+	 
+	
+		 for(Pig pig : pigs) {
+			 for (Bird egg : eggs) {
+	        if (pig.intersectsSprite(egg)) {
+	        	egg.setPositionXY(-3000, -3000);
+                
+                egg.render(gc);
+	        	score= score -3;
+	        }
+	        }
+	        }
+	 
+ }
+
+    
+    public void snooze() {
+    	
+    	
+    	
+    	
+            double birdTopY = blob.getPositionY();
+            double topPipeBottomY = pipes2.get(0).getPositionY() + DEF.pipe_HEIGHT;
+
+           
+            if (birdTopY <= topPipeBottomY) {
+                blob.setPositionXY(DEF.pipe_WIDTH,topPipeBottomY );
+            }
+
+
+
+            blob.setVelocity(0, DEF.BLOB_FLY_VEL); 
+
+            blob.render(gc); 
+            
+            long currentTime = System.nanoTime();
+            long snoozeDuration = (currentTime - snoozeStartTime) / 1_000_000_000; 
+            long remainingTime = Math.max(0, 6 - snoozeDuration); 
+
+          
+            String snoozeText = "Snooze: " + remainingTime + "s";
+            gc.setFill(Color.WHITE);
+            gc.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+            gc.fillText(snoozeText, 20, 40);
+
+            if (snoozeDuration >= 6) {
+                 
+                snoozecheck = false; 
+              
+            }
+      
+    }
+    
+    private void bounceback() {
+    	blob.setVelocity(-DEF.SCENE_SHIFT_INCR, backgroundCounter);
+    }
 	     private void showHitEffect() {
 	        ParallelTransition parallelTransition = new ParallelTransition();
 	        FadeTransition fadeTransition = new FadeTransition(Duration.seconds(DEF.TRANSITION_TIME), gameScene);

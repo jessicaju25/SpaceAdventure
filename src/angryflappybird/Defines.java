@@ -60,17 +60,17 @@ public class Defines {
    final int pig_HEIGHT = 70;
    final int pig_POS_X = 70;
    final int pig_POS_Y = 200;
-   final int pig_DROP_TIME = 300000000;  
+   final int pig_DROP_TIME = 100000000;  
    final int pig_COUNT = 5;
-   double pig_DROP_VEL = 0.5;    		
+   double pig_DROP_VEL = 0.4;    		
    final int pig_IMG_LEN = 1;
  
 
    
    
     // coefficients related to time
-    final int SCENE_SHIFT_TIME = 5;
-    final double SCENE_SHIFT_INCR = -0.4;
+    final int SCENE_SHIFT_TIME = 7;
+    final double SCENE_SHIFT_INCR = -0.5;
     final double NANOSEC_TO_SEC = 1.0 / 1000000000.0;
     final double TRANSITION_TIME = 0.1;
     final int TRANSITION_CYCLE = 2;
