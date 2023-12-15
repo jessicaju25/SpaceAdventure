@@ -68,7 +68,7 @@ public class AngryFlappyBird extends Application {
 	private int goldEggfreq = 3; 
 	private int whiteEggfreq = 5;
 	private long lastPigAppearanceTime = 0;
-	private final long pigAppearanceInterval = 20 * 1_000_000_000L;
+	private long pigAppearanceInterval = 20 * 1_000_000_000L;
     private Text scoreText = new Text ();
     private Text livesText = new Text ();
     private int lives = 3;
@@ -197,13 +197,15 @@ public class AngryFlappyBird extends Application {
 
         if(difficulty.equalsIgnoreCase("Medium")) {
 
-            DEF.SCENE_SHIFT_TIME = 15;
+            DEF.SCENE_SHIFT_TIME = 13;
+            pigAppearanceInterval = 15 * 1_000_000_000L;
 
         }
 
         else if(difficulty.equalsIgnoreCase("Hard")) {
 
-            DEF.SCENE_SHIFT_TIME = 25;
+            DEF.SCENE_SHIFT_TIME = 20;
+            pigAppearanceInterval = 10 * 1_000_000_000L;
 
         }
 
@@ -629,11 +631,12 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
     		 checkgoldegg();
     		 checkegg();
     		 pigCollectsEgg();
+    		  if (snoozecheck== false) {
  			for (Sprite floor: floors) {
  				 GAME_OVER = GAME_OVER || blob.intersectsSprite(floor);
                 }
 			 for (Sprite pipe : bottomPipes) {
-				 if(snoozecheck==false ) {
+				
 					    if ( blob.intersectsSprite(pipe)) {
 					    	 dyingSound();
 		                    lives--;
@@ -642,10 +645,10 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
 		                    
 		                    }
 				 }
-			    }
+			    
 			 
 			 for (Sprite pipe2 : topPipes) {
-				 if(snoozecheck==false ) {
+			
 				 
 					    if ( blob.intersectsSprite(pipe2)) {
 					    	 dyingSound();
@@ -655,17 +658,13 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
 		                    
 		                    }
 			    }
-			 }
+			 
 			 for (Sprite pig : pigs) {
-				 if(snoozecheck==false ) {
-					
-						    if (!GAME_OVER && blob.intersectsSprite(pig)) {
-						        dyingSound(); 
-						        GAME_OVER = true; 
-						    }
-				 
+			
+				 GAME_OVER = GAME_OVER || blob.intersectsSprite(pig);
 				 }
-			    }
+    		  }
+			    
 			if (GAME_OVER) {
 				
 		        showHitEffect();
@@ -769,9 +768,9 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
   * */
     public void snooze() {
     	
-    	
+    	for(int i=0; i<DEF.pipe_COUNT; i++) {
             double birdTopY = blob.getPositionY();
-            double topPipeBottomY = topPipes.get(0).getPositionY() + DEF.pipe_HEIGHT;
+            double topPipeBottomY = topPipes.get(i).getPositionY() + DEF.pipe_HEIGHT;
 
            
             if (birdTopY <= topPipeBottomY) {
@@ -793,6 +792,7 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
                 blob.setImage(DEF.IMAGE.get("blob1"));
                 
             }
+    	}
       
     }
     
