@@ -494,6 +494,7 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
      	 
     	 private void whiteEggAppear(int i) {
 <<<<<<< HEAD
+<<<<<<< HEAD
 
     		  Random r = new Random();
     		    int result = r.nextInt(20); 
@@ -504,6 +505,8 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
     		    }
     	 }
 =======
+=======
+>>>>>>> parent of e60b1d6 (code)
     		 Random r = new Random();
     		 int low = 1;
     		 int high = 20;
@@ -552,9 +555,14 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
       		}
       	
      	 public void pigappear(int i) {
+<<<<<<< HEAD
 
      		
 
+=======
+     		
+
+>>>>>>> parent of e60b1d6 (code)
      		 Random r = new Random();
     		 int low = 1;
     		 int high = 50;
@@ -589,8 +597,11 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
 			
 			// blob flies upward with animation
 <<<<<<< HEAD
+<<<<<<< HEAD
 			//if (isBounce == false ) {
 			if (snoozecheck == false ) {
+=======
+>>>>>>> parent of e60b1d6 (code)
 =======
 >>>>>>> parent of e60b1d6 (code)
 			if (CLICKED && diffTime <= DEF.BLOB_DROP_TIME) {
@@ -606,6 +617,7 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
 			    CLICKED = false;
 			}
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 			}
 			
@@ -630,13 +642,18 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
 
 =======
 >>>>>>> parent of e60b1d6 (code)
+=======
+>>>>>>> parent of e60b1d6 (code)
 			// render blob on GUI
 			blob.update(elapsedTime * DEF.NANOSEC_TO_SEC);
 			blob.render(gc);
     	 }
 <<<<<<< HEAD
+<<<<<<< HEAD
     	// }
 =======
+=======
+>>>>>>> parent of e60b1d6 (code)
     	 
     	 
 
@@ -657,6 +674,7 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
                 }
 			}
 			 for (Pipe pipe : pipes) {
+<<<<<<< HEAD
 <<<<<<< HEAD
 //<<<<<<< HEAD
 				 if(snoozecheck==false ) {
@@ -685,12 +703,17 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
 			
 
 =======
+=======
+>>>>>>> parent of e60b1d6 (code)
 				 GAME_OVER = GAME_OVER || blob.intersectsSprite(pipe);
 			    }
 			 
 			 for (Pipe pipe2 : pipes2) {
 				 GAME_OVER = GAME_OVER || blob.intersectsSprite(pipe2);
 			    }
+<<<<<<< HEAD
+>>>>>>> parent of e60b1d6 (code)
+=======
 >>>>>>> parent of e60b1d6 (code)
 			 for (Pig pig : pigs) {
 			     if ( blob.intersectsSprite(pig)) {
@@ -708,11 +731,17 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
 		        }
 		        for (Pipe pipe : pipes) {
 <<<<<<< HEAD
+<<<<<<< HEAD
 		        	
 		            pipe.setVelocity(0, 0);
 		        }
 		        for (Pipe pipes2 : pipes2) {
 		        	
+=======
+		            pipe.setVelocity(0, 0);
+		        }
+		        for (Pipe pipes2 : pipes2) {
+>>>>>>> parent of e60b1d6 (code)
 =======
 		            pipe.setVelocity(0, 0);
 		        }
@@ -732,6 +761,7 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
 
 //			
     	 }
+<<<<<<< HEAD
     	 public void gameOver () {
     	     Text gameoverText = new Text ("You lost all your lives! ");
     	     
@@ -761,6 +791,9 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
     	
     	
 
+=======
+    	 
+>>>>>>> parent of e60b1d6 (code)
     	 public void checkegg() {
     		 
     		 for (Bird egg: eggs) {
@@ -769,6 +802,7 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
                      egg.setPositionXY(-3000, -3000);
                   
                     egg.render(gc);
+<<<<<<< HEAD
 <<<<<<< HEAD
 
                  score = score +3;
@@ -781,10 +815,15 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
                  score = score +5;
                     //eggcheck = true;
 >>>>>>> parent of e60b1d6 (code)
+=======
+                 score = score +5;
+                    //eggcheck = true;
+>>>>>>> parent of e60b1d6 (code)
             
                  }
     	 }
     	 }
+<<<<<<< HEAD
 <<<<<<< HEAD
     	 
 
@@ -869,6 +908,9 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
     }
     
   
+=======
+   
+>>>>>>> parent of e60b1d6 (code)
 =======
    
 >>>>>>> parent of e60b1d6 (code)
