@@ -56,6 +56,7 @@ public class AngryFlappyBird extends Application {
     private ArrayList<Pipe> pipes;
     private ArrayList<Pipe> pipes2;
     private ArrayList<Bird> eggs;
+    private ArrayList<Bird> goldeggs;
     //private Pig pig;
     private int pipecount, eggcount;
     private ArrayList<Pig > pigs;
@@ -74,7 +75,7 @@ public class AngryFlappyBird extends Application {
     private int score;
     private boolean passed;
     private boolean  eggcheck;
-<<<<<<< HEAD
+
     private boolean goldeggcheck;
     private boolean pigcheck;
     private boolean snoozecheck;
@@ -89,16 +90,17 @@ public class AngryFlappyBird extends Application {
 	private final long pigAppearanceInterval = 20 * 1_000_000_000L;
     Text scoreText;
     
-=======
-    private MediaPlayer backgroundMusic;
-    private Text scoreText = new Text ();
+    private boolean isBounce;
+
+   
+   
     private Text livesText = new Text ();
     private int lives = 3;
     private Group gameoverScreen;
     private int lastPipe = -1;
-    private boolean pigcheck;
+ 
 //    private long p
->>>>>>> 532765dac7bff3ab231b16550cef25339803ad97
+
     
     
 	// the mandatory main method 
@@ -127,11 +129,7 @@ public class AngryFlappyBird extends Application {
         primaryStage.setTitle(DEF.STAGE_TITLE);
         primaryStage.setResizable(false);
         primaryStage.show();
-//        String backgroundMusicFile = "backgroundMusic.mp3";
-//        Media music = new Media (new File(backgroundMusicFile).toURI().toString());
-//        backgroundMusic = new MediaPlayer(music);
-//        backgroundMusic.setCycleCount(MediaPlayer.INDEFINITE);
-//        backgroundMusic.play();
+
         scoreText = new Text("Score: " + score);
         
         scoreText.setFont(Font.font( "Times New Roman", FontWeight.BOLD, 30));
@@ -165,13 +163,7 @@ public class AngryFlappyBird extends Application {
         
         gameControl = new VBox();
         gameControl.getChildren().addAll(DEF.startButton);
-//        scoreText = new Text("Score: 0" );
-//        scoreText.setFont(Font.font( "Times New Roman", FontWeight.BOLD, 30));
-//        scoreText.setFill(Color.BLACK);
-//        
-//        scoreText.setLayoutX(DEF.SCENE_WIDTH - 390);
-//        scoreText.setLayoutY(35);
-//        gameControl.getChildren().add(scoreText);
+
         
         // Add some spacing
         gameControl.getChildren().add(new Text(""));  // Empty text for spacing
@@ -246,11 +238,13 @@ public class AngryFlappyBird extends Application {
         CLICKED = false;
         GAME_OVER = false;
         GAME_START = false;
+        isBounce = false;
         floors = new ArrayList<>();
         pipes = new ArrayList<>();
         pipes2 = new ArrayList<>();
         pipeHeight = new  ArrayList<>();
         eggs = new ArrayList<>();
+        goldeggs = new ArrayList<>();
         pigs = new ArrayList<>();
         pipeHeight.add(25);
         pipeHeight.add(50); 
@@ -350,6 +344,16 @@ for(int i=0; i<DEF.egg_COUNT; i++) {
 		eggcheck = false;
 	}
 
+
+for(int i=0; i<DEF.egg_COUNT; i++) {
+	
+	
+	Bird egg = new Bird(-3000, -3000, DEF.IMAGE.get("goldegg"));
+	egg.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
+	egg.render(gc);
+	goldeggs.add(egg);
+	goldeggcheck = false;
+}
 //initialize pig
 for(int i=0; i<DEF.pig_COUNT; i++) {
 	
@@ -358,18 +362,12 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
 	pig.setVelocity(DEF.SCENE_SHIFT_INCR, DEF.pig_DROP_VEL);
 	pig.render(gc);
 	pigs.add(pig);
+	pigcheck = false;
 
 }
 
 
-//
-//pig = new Pig(-3000, 0 ,DEF.IMAGE.get("pig"));
-////pig.setVelocity(sceneVelocity, pigDropVelocity);z
-////pig.render(gc);
-//	//Y postion randomized 
-//	//array lit 
-//        
-//>>>>>>> 05d061acccdecd521e0eb214f527caeb4260e70b
+
         // initialize blob
         blob = new Bird(DEF.BLOB_POS_X, DEF.BLOB_POS_Y,DEF.IMAGE.get("blob0"));
         blob.render(gc);
@@ -417,13 +415,13 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
     	    	 moveFloor();
     	    	 updatePipes();
     	    	
-    	    	 movePipes2();
+    	    	 updatePipes2();
     	    	
     	    	 moveBlob();
     	    
     	    	 checkCollision();
     	    
-    	    	 pigUpdate();
+    	    	
 //    	    	 System.out.println(score);
     	    	 
     	     }
@@ -458,10 +456,24 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
     		
     		}
     	 }
+    	 
+    	 
+    	 private void updatePipes2() {
+     		for(int i=0; i<DEF.pipe_COUNT; i++) {
+     			movePipes2(i);
+     			pigUpdate(i);
+     		
+     		}
+     	 }
     	 	private void updateEggs(int i) {
     	 	
         		eggs.get(i).render(gc);
         		eggs.get(i).update(DEF.SCENE_SHIFT_TIME);
+        		goldeggs.get(i).render(gc);
+        		goldeggs.get(i).update(DEF.SCENE_SHIFT_TIME);
+        		goldeggcheck = true;
+        		eggcheck = true;
+        		
         		
         	}
     	 private void movePipes(int i) {
@@ -474,33 +486,23 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
      	        	double nextY = DEF.SCENE_HEIGHT -DEF.FLOOR_HEIGHT- DEF.pipe_HEIGHT;
      	        	pipes.get(i).setPositionXY(nextX, nextY);
      	        	whiteEggAppear(i);
-<<<<<<< HEAD
      	        	goldEggAppear( i); 
      	   		Random generator = new Random();
  				 randomIndex = generator.nextInt(pipeHeight.size());
                 DEF.pipe_HEIGHT = pipeHeight.get(randomIndex);
                
-=======
-		 	   		Random generator = new Random();
-					int randomIndex = generator.nextInt(pipeHeight.size());
-		            DEF.pipe_HEIGHT = pipeHeight.get(randomIndex);
-		           
->>>>>>> 532765dac7bff3ab231b16550cef25339803ad97
+
      			}
      			
      			pipes.get(i).render(gc);
      			pipes.get(i).update(DEF.SCENE_SHIFT_TIME);
      			score(i);
-//<<<<<<< HEAD
-//
-//=======
-//     	          
-//>>>>>>> 05d061acccdecd521e0eb214f527caeb4260e70b
+
      		}
      		
      	 
     	 private void whiteEggAppear(int i) {
-<<<<<<< HEAD
+
     		  Random r = new Random();
     		    int result = r.nextInt(20); 
 
@@ -508,26 +510,7 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
     		        eggs.get(i).setPositionXY(pipes.get(i).getPositionX(), pipes.get(i).getPositionY() - DEF.egg_HEIGHT);
     		        eggcheck = true;
     		    }
-=======
-//<<<<<<< HEAD
-    		 
-    		if (eggcount %2 ==0) {
-	    	    eggs.get(i).setPositionXY(pipes.get(i).getPositionX() ,pipes.get(i).getPositionY() - DEF.egg_HEIGHT);
-	    	  
-    		}
->>>>>>> 532765dac7bff3ab231b16550cef25339803ad97
-	    	
-//=======
-    		 Random random = new Random();
-    		 int randomNumber = random.nextInt(15); // Generate a random number between 0 and 15
-    		 //show egg when the random number is less than 5 (33%)
-    		 if(randomNumber < 5) {
-	    	    eggs.get(i).setPositionXY(pipes.get(i).getPositionX() ,pipes.get(i).getPositionY() - DEF.egg_HEIGHT);
-	    	    eggs.get(i).render(gc);
-    		 }
-//>>>>>>> 05d061acccdecd521e0eb214f527caeb4260e70b
-	    	}
-<<<<<<< HEAD
+    	 }
     	 private void goldEggAppear(int i ) {
     		 
     		  Random r = new Random();
@@ -539,19 +522,18 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
     		    }
     		    }
     		
-=======
-   
->>>>>>> 532765dac7bff3ab231b16550cef25339803ad97
+
     	 
-    	 private void movePipes2() {
+    	 private void movePipes2(int i) {
       		
-      		for(int i=0; i<DEF.pipe_COUNT; i++) {
+      		
       			if (pipes2.get(i).getPositionX() <= -DEF.pipe_WIDTH) {
 
       				double nextX = pipes2.get((i+1)%DEF.pipe_COUNT).getPositionX() + DEF.pipe_WIDTH + 200;
 
       	        	double nextY = 0;
       	        	pipes2.get(i).setPositionXY(nextX, nextY);
+      	        	pigappear(i);
       	        	
       	      
       			}
@@ -559,10 +541,9 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
       			pipes2.get(i).update(DEF.SCENE_SHIFT_TIME);
       		
       		}
-      	 }
-     	 
+      	
      	 public void pigappear(int i) {
-<<<<<<< HEAD
+
      		
      		long currentTime = System.nanoTime();
 
@@ -574,27 +555,18 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
     
 
      
-=======
-//     		
-     		 
-     	    Random r = new Random();
-            int low = 1;
-            int high = 50;
-            int result = r.nextInt(high-low) + low;
-        
-           if (result %4 ==0 && eggcheck ==false) {
-              pigs.get(i).setPositionXY(pipes.get(i).getPositionX() ,0);
-             pigcheck = true;
-           }
->>>>>>> 532765dac7bff3ab231b16550cef25339803ad97
+	
+     	
+
    
      	 } 
 
- public void pigUpdate() {
+ public void pigUpdate(int i) {
 	 
-	 for ( int i =0; i< DEF.pig_COUNT; i++) {
-	 pigappear(i);
-	 }
+	pigs.get(i).setVelocity(DEF.SCENE_SHIFT_INCR, DEF.pig_DROP_VEL);
+	pigs.get(i).update(DEF.SCENE_SHIFT_TIME);
+	pigs.get(i).render(gc);
+	pigcheck = false;
     	 }
     	 
     	 
@@ -604,7 +576,7 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
 			long diffTime = System.nanoTime() - clickTime;
 			
 			// blob flies upward with animation
-			
+			//if (isBounce == false ) {
 			if (snoozecheck == false ) {
 			if (CLICKED && diffTime <= DEF.BLOB_DROP_TIME) {
 				
@@ -618,13 +590,13 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
 			    blob.setVelocity(0, DEF.BLOB_DROP_VEL); 
 			    CLICKED = false;
 			}
-<<<<<<< HEAD
+
 			}
 			
 			else {
 				snooze();
 			}
-=======
+
 			for (Pipe pipe:pipes) {
 			    if (blob.intersectsSprite(pipe)) {
 			        blob.setVelocity(-500, 1000);
@@ -639,18 +611,14 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
                 }
 			}
 
->>>>>>> 532765dac7bff3ab231b16550cef25339803ad97
+
 			// render blob on GUI
 			blob.update(elapsedTime * DEF.NANOSEC_TO_SEC);
 			blob.render(gc);
     	 
     	 
     	 }
-<<<<<<< HEAD
-
-=======
-    	
->>>>>>> 532765dac7bff3ab231b16550cef25339803ad97
+    	// }
     	 
     	 
     	 
@@ -666,38 +634,34 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
                     if (lives<=0);
                     GAME_OVER = true;
                 }
-//				GAME_OVER = GAME_OVER || blob.intersectsSprite(floor);
 			}
 			 for (Pipe pipe : pipes) {
-<<<<<<< HEAD
+//<<<<<<< HEAD
 				 if(snoozecheck==false ) {
-				 GAME_OVER = GAME_OVER || blob.intersectsSprite(pipe);
+					    if ( blob.intersectsSprite(pipe)) {
+		                    lives--;
+		                    if (lives<=0);
+		                    GAME_OVER = true;
+		                }
 				 }
-			    }
+//				 GAME_OVER = GAME_OVER || blob.intersectsSprite(pipe);
+				 }
+			    
 			 
-			 for (Pipe pipe2 : pipes2) {
+			 for (Pipe pipe : pipes2) {
+//<<<<<<< HEAD
 				 if(snoozecheck==false ) {
-				 GAME_OVER = GAME_OVER || blob.intersectsSprite(pipe2);
-			    }
-			 }
-=======
-			     if ( blob.intersectsSprite(pipe)) {
-	                    lives--;
-//	                    bounceBack();
-	                    if (lives<=0);
-	                    GAME_OVER = true;
-	                    
-	                }
-			 }
-			 for (Pipe pipe2 : pipes2) {
-			     if ( blob.intersectsSprite(pipe2)) {
-//			             bounceBack();
-	                    lives--;
-	                   
-	                    if (lives<=0);
-	                    GAME_OVER = true;
-	                }			    }
->>>>>>> 532765dac7bff3ab231b16550cef25339803ad97
+					    if ( blob.intersectsSprite(pipe)) {
+		                    lives--;
+		                    if (lives<=0);
+		                    GAME_OVER = true;
+		                }
+				 }
+//				 GAME_OVER = GAME_OVER || blob.intersectsSprite(pipe);
+				 }
+			    
+			
+
 			 for (Pig pig : pigs) {
 			     if ( blob.intersectsSprite(pig)) {
 //			         bounceBack();
@@ -713,11 +677,11 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
 		            floor.setVelocity(0, 0);
 		        }
 		        for (Pipe pipe : pipes) {
-		        	 bounceback();
+		        	
 		            pipe.setVelocity(0, 0);
 		        }
 		        for (Pipe pipes2 : pipes2) {
-		        	 bounceback();
+		        	
 		            pipes2.setVelocity(0, 0);
 		        }
 //		        
@@ -768,15 +732,15 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
                 	 
                      
                      egg.setPositionXY(-3000, -3000);
-                     score =score +5;
+                  
                     egg.render(gc);
-<<<<<<< HEAD
+
                  score = score +3;
                  
-=======
-                 score = score +5;
-                    eggcheck = true;
->>>>>>> 532765dac7bff3ab231b16550cef25339803ad97
+
+               
+                 
+
             
                  }
     	 }
@@ -784,10 +748,7 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
     		 
     	 }
     	 
-<<<<<<< HEAD
-=======
-    	
->>>>>>> 532765dac7bff3ab231b16550cef25339803ad97
+
    
  public void checkgoldegg() {
     		 
@@ -868,9 +829,7 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
       
     }
     
-    private void bounceback() {
-    	blob.setVelocity(-DEF.SCENE_SHIFT_INCR, backgroundCounter);
-    }
+  
 	     private void showHitEffect() {
 	        ParallelTransition parallelTransition = new ParallelTransition();
 	        FadeTransition fadeTransition = new FadeTransition(Duration.seconds(DEF.TRANSITION_TIME), gameScene);
