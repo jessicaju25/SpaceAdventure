@@ -24,10 +24,11 @@ public class Defines {
     final int BLOB_POS_X = 70;
     final int BLOB_POS_Y = 200;
     final int BLOB_DROP_TIME = 300000000;  	// the elapsed time threshold before the blob starts dropping
-    final int BLOB_DROP_VEL = 50;    		// the blob drop velocity    //change to 50 from 300
-    final int BLOB_FLY_VEL = -40;
+    final int BLOB_DROP_VEL = 70;    		// the blob drop velocity    //change to 50 from 300
+    final int BLOB_FLY_VEL = -70;
     final int BLOB_IMG_LEN = 4;
     final int BLOB_IMG_PERIOD = 5;
+    final int BLOB_BB_VEL = 200; //bounce back
     
     // coefficients related to the floors
     final int FLOOR_WIDTH = 400;
@@ -75,7 +76,7 @@ public class Defines {
    
    
     // coefficients related to time
-    final int SCENE_SHIFT_TIME = 5;
+    final int SCENE_SHIFT_TIME = 7;
     final double SCENE_SHIFT_INCR = -0.4;
     final double NANOSEC_TO_SEC = 1.0 / 1000000000.0;
     final double TRANSITION_TIME = 0.1;
