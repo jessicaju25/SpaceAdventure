@@ -7,16 +7,12 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.media.AudioClip;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -24,22 +20,14 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import javafx.scene.image.Image;
 import java.util.Random;
 import java.io.File;
-import java.io.PipedInputStream;
 import java.util.ArrayList;
-import java.util.Random;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-//import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
 import javafx.scene.paint.Color;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
-import javafx.scene.media.AudioClip;
+
 
 //The Application layer
 public class AngryFlappyBird extends Application {
@@ -672,14 +660,9 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
 				 if(snoozecheck==false ) {
 					
 						    if (!GAME_OVER && blob.intersectsSprite(pig)) {
-						        dyingSound(); // Call the dyingSound method here
-						        GAME_OVER = true; // Set GAME_OVER to true
+						        dyingSound(); 
+						        GAME_OVER = true; 
 						    }
-						
-						
-						
-				
-					
 				 
 				 }
 			    }
@@ -807,7 +790,7 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
             gc.fillText(snoozeText, 20, 60);
             if (snoozeDuration >= 6) {
                 snoozecheck = false; 
-                blob.setImage(DEF.IMAGE.get("blob"));
+                blob.setImage(DEF.IMAGE.get("blob0"));
                 
             }
       
