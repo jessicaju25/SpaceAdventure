@@ -790,7 +790,7 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
             gc.fillText(snoozeText, 20, 60);
             if (snoozeDuration >= 6) {
                 snoozecheck = false; 
-                blob.setImage(DEF.IMAGE.get("blob0"));
+                blob.setImage(DEF.IMAGE.get("blob1"));
                 
             }
       
