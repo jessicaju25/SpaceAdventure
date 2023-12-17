@@ -1,3 +1,5 @@
+//Tia Mbabazi, Jessica Ju, Maya Garcia 
+// Team SwiftPulse 
 package angryflappybird;
 
 import javafx.animation.AnimationTimer;
@@ -740,39 +742,7 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
  
    
     
-         /**Method to make the bird free fly for 6secs when the bird intersects with the rocket
-          * */
-        public void snooze() {
-            
-            for(int i=0; i<DEF.pipe_COUNT; i++) {
-                double birdTopY = blob.getPositionY();
-                double topPipeBottomY = topPipes.get(i).getPositionY() + DEF.pipe_HEIGHT;
-        
-               
-                if (birdTopY <= topPipeBottomY) {
-                    blob.setPositionXY(DEF.pipe_WIDTH,topPipeBottomY );
-                }
-        
-                blob.setVelocity(0, DEF.BLOB_FLY_VEL); 
-                blob.setImage(DEF.IMAGE.get("blobf"));
-                blob.render(gc); 
-                long currentTime = System.nanoTime();
-                long snoozeDuration = (currentTime - snoozeStartTime) / 1_000_000_000; 
-                long remainingTime = Math.max(0, 6 - snoozeDuration); 
-                String snoozeText = "Snooze: " + remainingTime + "s";
-                gc.setFill(Color.WHITE);
-                gc.setFont(Font.font("Time New Roman", FontWeight.BOLD, 20));
-                gc.fillText(snoozeText, 20, 60);
-                
-                //extra second so it doesn't die immediately when in the middle of an intersection 
-                if (snoozeDuration >= 8) {
-                    snoozecheck = false; 
-                    blob.setImage(DEF.IMAGE.get("blob1"));
-                    
-                }
-            }
-          
-        }
+       
     
          public void gameOver () {
                 CLICKED=false;

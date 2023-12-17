@@ -1,3 +1,5 @@
+//Tia Mbabazi, Jessica Ju, Maya Garcia 
+//Team SwiftPulse 
 package angryflappybird;
 
 import javafx.geometry.Rectangle2D;

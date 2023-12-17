@@ -1,3 +1,5 @@
+//Tia Mbabazi, Jessica Ju, Maya Garcia 
+//Team SwiftPulse 
 package angryflappybird;
 
 import java.util.HashMap;
