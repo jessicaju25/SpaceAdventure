@@ -10,6 +10,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
+/** This class defines all the specifications of the game object*/
 public class Defines {
     
 	// dimension of the GUI application
@@ -76,7 +77,7 @@ public class Defines {
     final int TRANSITION_CYCLE = 2;
     
     // coefficients related to media display
-    final String STAGE_TITLE = "Angry Flappy Bird";
+    final String STAGE_TITLE = "The Space Adventure";
 	private final String IMAGE_DIR = "../resources/images/";
 
 

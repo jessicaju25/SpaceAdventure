@@ -3,7 +3,7 @@ package angryflappybird;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-
+/** This class contains for the applications of the game objects ( bird, pipes, pig, eggs and floor */
 public class Sprite {  
 	
     private Image image;
