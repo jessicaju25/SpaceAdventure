@@ -35,21 +35,32 @@ public class AngryFlappyBird extends Application {
 	private Defines DEF = new Defines();
     
     // time related attributes
-    private long clickTime, startTime, elapsedTime;   
+    public long clickTime;
+    private long startTime;
+    private long elapsedTime;   
     private AnimationTimer timer;
     
     // game components
-    private Sprite blob;
+    public Sprite blob;
     private ArrayList<Sprite> floors;
-    private ArrayList<Sprite> bottomPipes;
+    public static ArrayList<Sprite> bottomPipes;
     private ArrayList<Sprite> topPipes;
-    private ArrayList<Sprite> eggs;
+    public ArrayList<Sprite> eggs;
+    public boolean bounceBack;
+    private boolean  intersectCheck;
+    
     //private Pig pig;
     private int eggcount;
-    private ArrayList<Sprite > pigs;
-    private ArrayList<Sprite>  goldeggs;
+    public ArrayList<Sprite > pigs;
+    public ArrayList<Sprite>  goldeggs;
+    
     // game flags
-    private boolean CLICKED, GAME_START, GAME_OVER;
+    
+    public boolean CLICKED;
+
+    public boolean GAME_START;
+
+    private boolean GAME_OVER;
     
     // scene graphs
     private Group gameScene;	 // the left half of the scene
@@ -61,17 +72,17 @@ public class AngryFlappyBird extends Application {
     private boolean  eggcheck;
     private boolean goldeggcheck;
     private boolean pigcheck;
-    private boolean snoozecheck;
+    public boolean snoozecheck;
     private MediaPlayer backgroundMusic;
 	private int randomIndex;
-	private long snoozeStartTime;
+	public long snoozeStartTime;
 	private int goldEggfreq = 3; 
 	private int whiteEggfreq = 5;
 	private long lastPigAppearanceTime = 0;
-	private long pigAppearanceInterval = 20 * 1_000_000_000L;
+	public static long pigAppearanceInterval = 20 * 1_000_000_000L;
     private Text scoreText = new Text ();
     private Text livesText = new Text ();
-    private int lives = 3;
+    public int lives = 3;
 
     
     
@@ -119,7 +130,6 @@ public class AngryFlappyBird extends Application {
         gameScene.getChildren().add(scoreText);
         livesText = new Text ("Lives: " + lives);
 
-//        gameScene.getChildren().add(scoreText);
         livesText.setFont(Font.font("Times New Roman", FontWeight.BOLD, 30));
         livesText.setFill(Color.WHITE);
         livesText.setLayoutX(DEF.SCENE_WIDTH - 150);
@@ -135,9 +145,8 @@ public class AngryFlappyBird extends Application {
         DEF.easyButton.setOnMouseClicked(e -> handleDifficultyButton("Easy"));
         DEF.mediumButton.setOnMouseClicked(e -> handleDifficultyButton("Medium"));
         DEF.hardButton.setOnMouseClicked(e -> handleDifficultyButton("Hard"));
-        DEF.playagain.setOnMouseClicked(e -> {
-        	resetGameScene(true);
-        });
+
+    
         
         gameControl = new VBox();
         gameControl.getChildren().addAll(DEF.startButton);
@@ -193,41 +202,47 @@ public class AngryFlappyBird extends Application {
     }
     
     
-    private void handleDifficultyButton(String difficulty ) {
+    public void handleDifficultyButton(String difficulty ) {
 
         if(difficulty.equalsIgnoreCase("Medium")) {
 
-            DEF.SCENE_SHIFT_TIME = 13;
+            Defines.SCENE_SHIFT_TIME = 13;
             pigAppearanceInterval = 15 * 1_000_000_000L;
 
         }
 
         else if(difficulty.equalsIgnoreCase("Hard")) {
 
-            DEF.SCENE_SHIFT_TIME = 20;
+            Defines.SCENE_SHIFT_TIME = 20;
             pigAppearanceInterval = 10 * 1_000_000_000L;
 
         }
 
     }
-    
-    private void mouseClickHandler(MouseEvent e) {
-    	if (GAME_OVER) {
+    /*
+     * Method to handle when button is clicked
+     */
+    public void mouseClickHandler(MouseEvent e) {
+        if (GAME_OVER) {
             resetGameScene(false);
+            //handle game over screen
+            gameScene.getChildren().removeIf(node -> node instanceof Text && ((Text) node).getText().equals("        Game Over! \n You are lost in space!"));
         }
-    	else if (GAME_START){
+        else if (GAME_START){
             clickTime = System.nanoTime();   
         }
-    	GAME_START = true;
+        GAME_START = true;
         CLICKED = true;
     }
     
-    private void resetGameScene(boolean firstEntry) {
+    public void resetGameScene(boolean firstEntry) {
     	
     	// reset variables
         CLICKED = false;
         GAME_OVER = false;
         GAME_START = false;
+        bounceBack = false;
+        intersectCheck = false;
         floors = new ArrayList<>();
         bottomPipes = new ArrayList<>();
         topPipes = new ArrayList<>();
@@ -352,489 +367,551 @@ for(int i=0; i<DEF.pig_COUNT; i++) {
     }
 
     //timer stuff
+    //timer stuff
     class MyTimer extends AnimationTimer {
-    	
-    	int counter = 0;
-    	long backgroundCounter = 0;
-    	
-    	 @Override
-    	 public void handle(long now) {   		 
-    		 // time keeping
-    	     elapsedTime = now - startTime;
-    	     startTime = now;
-    	     //double  tenSeconds = startTime * DEF.NANOSEC_TO_SEC;
-    	     ImageView background = (ImageView) gameScene.getChildren().get(0);
-    	     // clear current scene
-    	     gc.clearRect(0, 0, DEF.SCENE_WIDTH, DEF.SCENE_HEIGHT);
-    	     //background.setImage(DEF.IMAGE.get("background"));
-    	     if  ( now - backgroundCounter >= 10_000_000_000L ) {
-    	        
-    	         
-    	         Image current = background.getImage(); //get current background
-    	         
-    	         if (current.equals(DEF.IMAGE.get("background"))) {
-    	         background.setImage(DEF.IMAGE.get("background0"));
-    	         }
-    	         else {
-    	             background.setImage(DEF.IMAGE.get("background"));
-    	         }
-    	         
-    	         backgroundCounter = now; 
-    	     
-    	     }
-    	     
-    	     if (GAME_START) {
-    	    	 moveFloor();
-    	    	 updatebottomPipes();
-    	    	 moveBlob();
-    	    	 checkCollision();
-    	    	 updatetopPipes();
-    	     }
-    	 }
-    	 /*Method to update the score when the blob has passed the pipe 
-    	  *  @param i, the current pipe 
-    	  * */
-    	 private void score(int i) {
-    		 if (bottomPipes.get(i).getPositionX() <= blob.getPositionX() && passed== false) {
-    		 score = score +1;
-    		 passed = true;
-    		 eggcount = eggcount +1;
-    		 scoreText.setText("Score: " + score); 
-    		 }
-    		 
-    	 }
-    	 
-    	 /*Method to move the floor
-    	  * */
-    	 private void moveFloor() {
-    		
-    		for(int i=0; i<DEF.FLOOR_COUNT; i++) {
-    			if (floors.get(i).getPositionX() <= -DEF.FLOOR_WIDTH) {
-    				double nextX = floors.get((i+1)%DEF.FLOOR_COUNT).getPositionX() + DEF.FLOOR_WIDTH ;
-    	        	double nextY = DEF.SCENE_HEIGHT - DEF.FLOOR_HEIGHT;
-    	        	floors.get(i).setPositionXY(nextX, nextY);
-    			}
-    			floors.get(i).render(gc);
-    			floors.get(i).update(DEF.SCENE_SHIFT_TIME);
-    		}
-    	 }
-    	 /*Method to update the eggs and move the pipes
-    	  * */
-    	 private void updatebottomPipes() {
-    		for(int i=0; i<DEF.pipe_COUNT; i++) {
-    			movebottomPipes(i);
-    			updateEggs(i);
-    		
-    		}
-    	 }
-    	 
-    	 /* Method to update the eggs
-    	
-    	  * */
-    	 	private void updateEggs(int i) {
-    	 	
-        	eggs.get(i).render(gc);
-        	eggs.get(i).update(DEF.SCENE_SHIFT_TIME);
-        	goldeggs.get(i).render(gc);
-       		goldeggs.get(i).update(DEF.SCENE_SHIFT_TIME);
-       		eggcheck = false;
-       		goldeggcheck = false;
-        	}
-    	 	
-    	 	
-    	 	 /* Method to change the X and Y position of the bottom pipes and call the gold and white eggs to appear 
-        	@param int i, the current pipe 
-       	  * */
-    	 private void movebottomPipes(int i) {
-
-     			if (bottomPipes.get(i).getPositionX() <= -DEF.pipe_WIDTH) {
-     				passed = false;
-     				double nextX = bottomPipes.get((i+1)%DEF.pipe_COUNT).getPositionX() + DEF.pipe_WIDTH + 200;
-     	        	double nextY = DEF.SCENE_HEIGHT -DEF.FLOOR_HEIGHT- DEF.pipe_HEIGHT;
-     	        	bottomPipes.get(i).setPositionXY(nextX, nextY);
-     	        	whiteEggAppear(i);
-     	        	goldEggAppear( i); 
-     	        	Random generator = new Random();
-     	        	randomIndex = generator.nextInt(pipeHeight.size());
-     	        	DEF.pipe_HEIGHT = pipeHeight.get(randomIndex);
-               
-     			}
-     			
-     			bottomPipes.get(i).render(gc);
-     			bottomPipes.get(i).update(DEF.SCENE_SHIFT_TIME);
-     			score(i);
-
-     		}
-     		
-    	 /* Method to make the white eggs appear randomly on the pipes
-    	   @param int i, for the position of the current pipe
-     	
-    	  * */
-    	 private void whiteEggAppear(int i) {
-    		  Random r = new Random();
-    		    int result = r.nextInt(20); 
-
-    		    if (result < whiteEggfreq && goldeggcheck == false && pigcheck == false) {
-    		        eggs.get(i).setPositionXY(bottomPipes.get(i).getPositionX(), bottomPipes.get(i).getPositionY() - DEF.egg_HEIGHT);
-    		        eggcheck = true;
-    		    }
-	    	
-	    	}
-    	 /* Method to make the gold eggs appear randomly on the pipes
-  	   @param int i, for the position of the current pipe
-   	
-  	  * */
-    	 private void goldEggAppear(int i ) {
-    		 
-    		  Random r = new Random();
-    		    int result = r.nextInt(20); 
-
-    		    if (result < goldEggfreq && eggcheck == false && pigcheck == false) {
-    		        goldeggs.get(i).setPositionXY(bottomPipes.get(i).getPositionX(),bottomPipes.get(i).getPositionY() - DEF.egg_HEIGHT);
-    		        goldeggcheck = true;
-    		    }
-    		    }
-    		
-    	 /* Method to change the X and Y position of the top pipes and call the gold and white eggs to appear 
-     	@param int i, the current pipe 
-    	  * */
-    	 private void movetopPipes(int i) {
-      		
-      		
-      			if (topPipes.get(i).getPositionX() <= -DEF.pipe_WIDTH) {
-
-      				double nextX = topPipes.get((i+1)%DEF.pipe_COUNT).getPositionX() + DEF.pipe_WIDTH + 200;
-
-      	        	double nextY = 0;
-      	        	topPipes.get(i).setPositionXY(nextX, nextY);
-      	        	pigappear( i);
-      	      
-      			}
-      			topPipes.get(i).render(gc);
-      			topPipes.get(i).update(DEF.SCENE_SHIFT_TIME);
-      		
-      	
-      	 }
-    	 /* Method to make the pig drop every 20secs on the pipes
-    	   @param int i, for the position of the current pipe
-     	
-    	  * */
-     	 public void pigappear(int i) {
-     		
-     		long currentTime = System.nanoTime();
-
-     	    if (currentTime - lastPigAppearanceTime >= pigAppearanceInterval && goldeggcheck == false && eggcheck == false) {
-	    	   pigs.get(i).setPositionXY(bottomPipes.get(i).getPositionX() ,0);
-	    	  pigcheck = true;
-	    	  lastPigAppearanceTime = currentTime;
-    		}
-    
-
-     
-   
- 
-
-    	 } 
-     	 
-    	 /* Method to update the pigs 
-     	
-    	  * */	 
- public void pigUpdate(int i) {
-	 
-		pigs.get(i).setVelocity(DEF.SCENE_SHIFT_INCR, DEF.pig_DROP_VEL);
-	    pigs.get(i).update(DEF.SCENE_SHIFT_TIME);
-	    pigs.get(i).render(gc);
-	    pigcheck = false;
-	     		 
-    	 }
- /*Method to update the pig and move the pipes
-  * */
- private void updatetopPipes() {
-		for(int i=0; i<DEF.pipe_COUNT; i++) {
-			movetopPipes(i);
-			pigUpdate(i);
-		
-		}
-	 }
- /*Method to update the blob
-  * */
-    	 private void moveBlob() {
-    		 
-			long diffTime = System.nanoTime() - clickTime;
-			
-			// blob flies upward with animation
-			
-			if (snoozecheck == false ) {
-			if (CLICKED && diffTime <= DEF.BLOB_DROP_TIME) {
-				
-				int imageIndex = Math.floorDiv(counter++, DEF.BLOB_IMG_PERIOD);
-				imageIndex = Math.floorMod(imageIndex, DEF.BLOB_IMG_LEN);
-				blob.setImage(DEF.IMAGE.get("blob"+String.valueOf(imageIndex)));
-				blob.setVelocity(0, DEF.BLOB_FLY_VEL);
-			}
-			// blob drops after a period of time without button click
-			else {
-			    blob.setVelocity(0, DEF.BLOB_DROP_VEL); 
-			    CLICKED = false;
-			}
-			
-			bounceBack();
-			
-			}
-			
-			else {
-				snooze();
-			}
-			// render blob on GUI
-			blob.update(elapsedTime * DEF.NANOSEC_TO_SEC);
-			blob.render(gc);
-    	 
-    	 
-    	 }
-
-    	 
-    	 /*Method to bounce the blob backward and make it fall to the ground when it hits a pipe or pig
-    	  * */ 
-    	 public void bounceBack() {
-    		 for (Sprite pipe:bottomPipes) {
- 			    if (blob.intersectsSprite(pipe)) {
- 			        blob.setVelocity(-500, 1000);
- 			        CLICKED = false;
- 			    }
- 			 
- 			}
- 			for (Sprite pipe: topPipes) {
- 			    if (blob.intersectsSprite(pipe)) {
-                     blob.setVelocity(-500, 1000);
-                     CLICKED = false;
- 			    }
- 			}
- 			
- 			for (Sprite pig:pigs) {
- 			    if (blob.intersectsSprite(pig)) {
- 			        blob.setVelocity(-500, 1000);
- 			        CLICKED = false;
- 			    }
- 			 
- 			}
-    	 }
-    	 public void dyingSound() {
-    	  String audioPath = "dying.mp3";
-          AudioClip sound = new AudioClip(getClass().getResource(audioPath).toString());
-	      sound.play();
-    	 }
-    	 /*Method to check all the collisions of with the Sprites and the pipe
-    	  * Note: the game is over when the blob collied with the pig and floor
-    	  * If the blob intersects with the pipe it loses lives, once three lives a lost the game is over
-    	  * */
-    	 public void checkCollision() {
-    		 checkgoldegg();
-    		 checkegg();
-    		 pigCollectsEgg();
-    		  if (snoozecheck== false) {
- 			for (Sprite floor: floors) {
- 				 GAME_OVER = GAME_OVER || blob.intersectsSprite(floor);
-                }
-			 for (Sprite pipe : bottomPipes) {
-				
-					    if ( blob.intersectsSprite(pipe)) {
-					    	 dyingSound();
-		                    lives--;
-		                    if (lives<=0);
-		                    	GAME_OVER = true;
-		                    
-		                    }
-				 }
-			    
-			 
-			 for (Sprite pipe2 : topPipes) {
-			
-				 
-					    if ( blob.intersectsSprite(pipe2)) {
-					    	 dyingSound();
-		                    lives--;
-		                    if (lives<=0);
-		                    	GAME_OVER = true;
-		                    
-		                    }
-			    }
-			 
-			 for (Sprite pig : pigs) {
-			
-				 GAME_OVER = GAME_OVER || blob.intersectsSprite(pig);
-				 }
-    		  }
-			    
-			if (GAME_OVER) {
-				
-		        showHitEffect();
-		        for (Sprite floor : floors) {
-		            floor.setVelocity(0, 0);
-		        }
-		        for (Sprite pipe : bottomPipes) {
-
-		            pipe.setVelocity(0, 0);
-		        }
-		        for (Sprite pipes2 : topPipes) {
-
-		            pipes2.setVelocity(0, 0);
-		        }
-
-		        timer.stop();
-		        if (lives <= 0 ) {
-		        	lives = 3;
-		        	gameOver();
-		        }
-		    }
-			
-			
-			
-			
-    	 }
-    	 /*Method to check collision with the white egg and add 3 points to the score
-    	  * */
-    	 public void checkegg() {
-    
-    		 for (Sprite egg: eggs) {
-                 if(blob.intersectsSprite(egg)) {
-                	 
-                     
-                 egg.setPositionXY(-3000, -3000); 
-                 egg.render(gc);
-                 score = score +3;
-                 String audioPath = "bonus.mp3";
-                 AudioClip sound = new AudioClip(getClass().getResource(audioPath).toString());
- 		         sound.play();
+        
+        int counter = 0;
+        long backgroundCounter = 0;
+        
+         @Override
+        public void handle(long now) {           
+             // time keeping
+             elapsedTime = now - startTime;
+             startTime = now;
+             //double  tenSeconds = startTime * DEF.NANOSEC_TO_SEC;
+             ImageView background = (ImageView) gameScene.getChildren().get(0);
+             // clear current scene
+             gc.clearRect(0, 0, DEF.SCENE_WIDTH, DEF.SCENE_HEIGHT);
+             //background.setImage(DEF.IMAGE.get("background"));
+             if  ( now - backgroundCounter >= 10_000_000_000L ) {
                  
-            
+                 Image current = background.getImage(); //get current background
+                 
+                 if (current.equals(DEF.IMAGE.get("background"))) {
+                 background.setImage(DEF.IMAGE.get("background0"));
                  }
-    	 }
-    		 
-    		 
-    	 }
-    	 
-   
-    	 /*Method to check collision with the gold egg 
-    	  * */  	 
- public void checkgoldegg() {
-    		 
-	 for (Sprite egg : goldeggs) {
-	        if (blob.intersectsSprite(egg)) {
-	    
-	            snoozecheck = true;
-	            snoozeStartTime = System.nanoTime();
-	            egg.setPositionXY(-3000, -3000);
-	            egg.render(gc);
-	            String audioPath = "bonus.mp3";
-                AudioClip sound = new AudioClip(getClass().getResource(audioPath).toString());
-		         sound.play();
-                
-	         
-	            }
- }
-	 }
- 
- //*Method to check collision with the pig and the eggs and removing points if collision happens 
-
- public void pigCollectsEgg() {
-	
-		 for(Sprite pig : pigs) {
-			 for (Sprite egg : goldeggs) {
-	        if (pig.intersectsSprite(egg)) {
-	        	egg.setPositionXY(-3000, -3000);
-                
-                egg.render(gc);
-	        	score= score -3;
-	        }
-	        }
-	        }
-	 
-	
-		 for(Sprite pig : pigs) {
-			 for (Sprite egg : eggs) {
-	        if (pig.intersectsSprite(egg)) {
-	        	egg.setPositionXY(-3000, -3000);
-                
-                egg.render(gc);
-	        	score= score -3;
-	        }
-	        }
-	        }
-	 
- }
-
-    
- /*Method to make the bird free flow for 6secs when the bird in
-  * */
-    public void snooze() {
-    	
-    	for(int i=0; i<DEF.pipe_COUNT; i++) {
-            double birdTopY = blob.getPositionY();
-            double topPipeBottomY = topPipes.get(i).getPositionY() + DEF.pipe_HEIGHT;
-
+                 else {
+                     background.setImage(DEF.IMAGE.get("background"));
+                     }
+                     
+                     backgroundCounter = now; 
+                 
+                 }
+                 
+                 if (GAME_START) {
+                     moveFloor();
+                     updatebottomPipes();
+                     moveBlob();
+                     checkCollision();
+                     updatetopPipes();
+                 }
+             }
+         /*Method to update the score when the blob has passed the pipe 
+          *  @param i, the current pipe 
+          * */
+         private void score(int i) {
+             if (bottomPipes.get(i).getPositionX() <= blob.getPositionX() && passed== false) {
+             score = score +1;
+             passed = true;
+             eggcount = eggcount +1;
+             scoreText.setText("Score: " + score); 
+             }
+             
+         }
+         
+         /*Method to move the floor
+          * */
+         private void moveFloor() {
+            
+            for(int i=0; i<DEF.FLOOR_COUNT; i++) {
+                if (floors.get(i).getPositionX() <= -DEF.FLOOR_WIDTH) {
+                    double nextX = floors.get((i+1)%DEF.FLOOR_COUNT).getPositionX() + DEF.FLOOR_WIDTH ;
+                    double nextY = DEF.SCENE_HEIGHT - DEF.FLOOR_HEIGHT;
+                    floors.get(i).setPositionXY(nextX, nextY);
+                }
+                floors.get(i).render(gc);
+                floors.get(i).update(DEF.SCENE_SHIFT_TIME);
+            }
+         }
+         
+         /*Method to update the eggs and move the pipes
+          * */
+         private void updatebottomPipes() {
+            for(int i=0; i<DEF.pipe_COUNT; i++) {
+                movebottomPipes(i);
+                updateEggs(i);
+            
+            }
+         }
+         
+         /* Method to update the eggs
+          * */
+         private void updateEggs(int i) {
+            eggs.get(i).render(gc);
+            eggs.get(i).update(DEF.SCENE_SHIFT_TIME);
+            goldeggs.get(i).render(gc);
+            goldeggs.get(i).update(DEF.SCENE_SHIFT_TIME);
+            eggcheck = false;
+            goldeggcheck = false;
+            }
+            
+            
+         /* Method to change the X and Y position of the bottom pipes and call the gold and white eggs to appear 
+            @param int i, the current pipe 
+          * */
+         private void movebottomPipes(int i) {
+            if (bottomPipes.get(i).getPositionX() <= -DEF.pipe_WIDTH) {
+                passed = false;
+                double nextX = bottomPipes.get((i+1)%DEF.pipe_COUNT).getPositionX() + DEF.pipe_WIDTH + 200;
+                double nextY = DEF.SCENE_HEIGHT -DEF.FLOOR_HEIGHT- DEF.pipe_HEIGHT;
+                bottomPipes.get(i).setPositionXY(nextX, nextY);
+                whiteEggAppear(i);
+                goldEggAppear( i); 
+                Random generator = new Random();
+                randomIndex = generator.nextInt(pipeHeight.size());
+                DEF.pipe_HEIGHT = pipeHeight.get(randomIndex);
            
-            if (birdTopY <= topPipeBottomY) {
-                blob.setPositionXY(DEF.pipe_WIDTH,topPipeBottomY );
             }
+            
+            bottomPipes.get(i).render(gc);
+            bottomPipes.get(i).update(DEF.SCENE_SHIFT_TIME);
+            score(i);
 
-            blob.setVelocity(0, DEF.BLOB_FLY_VEL); 
-            blob.setImage(DEF.IMAGE.get("blobf"));
-            blob.render(gc); 
+        }
+            
+         /* Method to make the white eggs appear randomly on the pipes
+           @param int i, for the position of the current pipe
+        
+          * */
+         private void whiteEggAppear(int i) {
+                Random r = new Random();
+                int result = r.nextInt(20); 
+            
+                if (result < whiteEggfreq && goldeggcheck == false && pigcheck == false) {
+                    eggs.get(i).setPositionXY(bottomPipes.get(i).getPositionX(), bottomPipes.get(i).getPositionY() - DEF.egg_HEIGHT);
+                    eggcheck = true;
+                }
+
+            }
+         /* Method to make the gold eggs appear randomly on the pipes
+       @param int i, for the position of the current pipe
+    
+      * */
+         private void goldEggAppear(int i ) {
+                Random r = new Random();
+                int result = r.nextInt(20); 
+            
+                if (result < goldEggfreq && eggcheck == false && pigcheck == false) {
+                    goldeggs.get(i).setPositionXY(bottomPipes.get(i).getPositionX(),bottomPipes.get(i).getPositionY() - DEF.egg_HEIGHT);
+                    goldeggcheck = true;
+                }
+         }
+            
+         /* Method to change the X and Y position of the top pipes and call the gold and white eggs to appear 
+        @param int i, the current pipe 
+          * */
+         private void movetopPipes(int i) {
+                if (topPipes.get(i).getPositionX() <= -DEF.pipe_WIDTH) {
+
+                    double nextX = topPipes.get((i+1)%DEF.pipe_COUNT).getPositionX() + DEF.pipe_WIDTH + 200;
+
+                    double nextY = 0;
+                    topPipes.get(i).setPositionXY(nextX, nextY);
+                    pigappear( i);
+              
+                }
+                topPipes.get(i).render(gc);
+                topPipes.get(i).update(DEF.SCENE_SHIFT_TIME);
+            
+        
+         }
+         /* Method to make the pig drop every 20secs on the pipes
+           @param int i, for the position of the current pipe
+        
+          * */
+         public void pigappear(int i) {
+            
             long currentTime = System.nanoTime();
-            long snoozeDuration = (currentTime - snoozeStartTime) / 1_000_000_000; 
-            long remainingTime = Math.max(0, 6 - snoozeDuration); 
-            String snoozeText = "Snooze: " + remainingTime + "s";
-            gc.setFill(Color.WHITE);
-            gc.setFont(Font.font("Time New Roman", FontWeight.BOLD, 20));
-            gc.fillText(snoozeText, 20, 60);
-            if (snoozeDuration >= 6) {
-                snoozecheck = false; 
-                blob.setImage(DEF.IMAGE.get("blob1"));
-                
+
+            if (currentTime - lastPigAppearanceTime >= pigAppearanceInterval && goldeggcheck == false && eggcheck == false) {
+               pigs.get(i).setPositionXY(bottomPipes.get(i).getPositionX() ,0);
+              pigcheck = true;
+              lastPigAppearanceTime = currentTime;
             }
-    	}
-      
-    }
-    
-	 public void gameOver () {
-	     Text gameoverText = new Text ("You lost all your lives! ");
-	     
-	     gameoverText.setFont(Font.font("Times New Roman", FontWeight.SEMI_BOLD, 20));
-	     gameoverText.setFill(Color.RED);
-	     
-	     gameoverText.setLayoutX(200);
-	     gameoverText.setLayoutY(100);
-	     
-//
-	     VBox gameoverScreen = new VBox(20);
-	     gameoverScreen.setAlignment(Pos.CENTER);
-//	     gameoverScreen.setFill(Color.GREY);
-	     
-	     gameoverScreen.getChildren().addAll(gameoverText, DEF.playagain);
-//	     gameScene.getChildren()
-	     Scene gameoverScene = new Scene (gameoverScreen, DEF.SCENE_WIDTH, DEF.SCENE_HEIGHT);
-	     Stage gamestage = (Stage) gameScene.getScene().getWindow();
-	     gamestage.setScene(gameoverScene);
-	     GAME_OVER = true;
-	     
-	
-	     
-	     
+         } 
+         
+         
+         /* Method to update the pigs 
+          * */   
+         public void pigUpdate(int i) {
+             
+                pigs.get(i).setVelocity(DEF.SCENE_SHIFT_INCR, DEF.pig_DROP_VEL);
+                pigs.get(i).update(DEF.SCENE_SHIFT_TIME);
+                pigs.get(i).render(gc);
+                pigcheck = false;
+         }
+         
+         /*Method to update the pig and move the pipes
+          * */
+         private void updatetopPipes() {
+                for(int i=0; i<DEF.pipe_COUNT; i++) {
+                    movetopPipes(i);
+                    pigUpdate(i);
+                
+                }
+             }
+         /*Method to update the blob
+          * */
+         private void moveBlob() {
+             
+            long diffTime = System.nanoTime() - clickTime;
+            
+            // blob flies upward with animation
+            
+            if (snoozecheck == false) {
+            if (CLICKED && diffTime <= DEF.BLOB_DROP_TIME) {
+                
+                int imageIndex = Math.floorDiv(counter++, DEF.BLOB_IMG_PERIOD);
+                imageIndex = Math.floorMod(imageIndex, DEF.BLOB_IMG_LEN);
+                blob.setImage(DEF.IMAGE.get("blob"+String.valueOf(imageIndex)));
+                blob.setVelocity(0, DEF.BLOB_FLY_VEL);
+            }
+            // blob drops after a period of time without button click
+            else {
+                blob.setVelocity(0, DEF.BLOB_DROP_VEL); 
+                CLICKED = false;
+            }
+            
+            bounceBack();
+            
+            }
+            
+            else {
+                snooze();
+            }
+            // render blob on GUI
+            blob.update(elapsedTime * DEF.NANOSEC_TO_SEC);
+            blob.render(gc);
+         
+         
+         }
 
-	 }
+         /*Method to check all the collisions of with the Sprites and the pipe
+          * Note: the game is over when the blob collides with the pig and floor
+          * If the blob intersects with the pipe you lose a life, once three lives a lost, the game is over
+          * */
+         public void checkCollision() {
+             if (!snoozecheck && !bounceBack && !intersectCheck) {
+                checkgoldegg();
+                checkegg();
+                checkupperpipe();
+                checklowerpipe();
+                checkpig();
+                checkfloor();
+                pigCollectsEgg();
+             }
+        }
+         /*
+          * Method to stop the movement, animation, and update in position of all sprites
+          * sets the velocity of all game sprites (floors, pillars, pigs, eggs, and gold eggs) to zero
+          */
+         public void StopMovementSprites() {
+             showHitEffect();
+             timer.stop();
+                for (Sprite floor : floors) {
+                    floor.setVelocity(0, 0);
+                }
+                for (Sprite pipes : topPipes) {
+                    pipes.setVelocity(0, 0);
+                }
+                for (Sprite pipes2 : bottomPipes) {
+                    pipes2.setVelocity(0, 0);
+                }
+                for (Sprite pig : pigs) {
+                    pig.setVelocity(0, 0);
+                }
+                for (Sprite egg : eggs) {
+                    egg.setVelocity(0, 0);
+                }
+                for (Sprite goldEgg : goldeggs) {
+                    goldEgg.setVelocity(0, 0);
+                }
+            }
+         
+         
+         /* Method to bounce the blob backward and make it fall to the ground when it hits a pipe or pig
+          * */ 
+         public void bounceBack() {
+                 if(bounceBack) {
+                     StopMovementSprites();
+                 CLICKED = false;
+                 blob.setVelocity(-500, 2000);
+                 bounceBack = false;
+                 CLICKED = true;
+                    }   
+         }
+         
+         public void dyingSound() {
+          String audioPath = "dying.mp3";
+          AudioClip sound = new AudioClip(getClass().getResource(audioPath).toString());
+          sound.play();
+         }
+         
+         
+         /*Method to check collision with the floor and make the game over
+          * */
+         public void checkfloor() {
+             for (Sprite floor : floors) {
+                    if (blob.intersectsSprite(floor)) {
+                        gameOver();
+                    }
+                    
+         }
+         }
+         
+         /*Method to check collision with the pig and make the game over
+          * */
+         public void checkpig() {
+             for (Sprite pig : pigs) {
+                    if (blob.intersectsSprite(pig)) {
+                        gameOver();
+                        bounceBack=true;
+                        intersectCheck = true;
+                    }
+                }
+         }
+         
+         /*Method to check collision with the lower pipe and remove a life
+          * */
+         public void checklowerpipe() {
+             for (Sprite pipe : bottomPipes) {
+                    if (blob.intersectsSprite(pipe)) {
+                        dyingSound();
+                        lives--;
+                        GAME_OVER = true;
+                        bounceBack=true;
+                        intersectCheck = true;
+                        if (lives <= 0) {
+                            gameOver();
+                        }
+                    }
+                }
+         }
+         /*Method to check collision with the upper pipe and remove a life
+          * */
+         public void checkupperpipe() {
+             for (Sprite pipes2 : topPipes) {
+                    if (blob.intersectsSprite(pipes2)) {
+                        dyingSound();
+                        lives--;
+                        GAME_OVER = true;
+                        bounceBack=true;
+                        intersectCheck = true;
+                        if (lives <= 0) {
+                            gameOver();
+                        }
+                    }
+                }
+         }
+         
+
+         
+   
+         /*Method to check collision with the gold egg 
+          * */       
+         public void checkgoldegg() {
+             for (Sprite egg : goldeggs) {
+                    if (blob.intersectsSprite(egg)) {
+                
+                        snoozecheck = true;
+                        snoozeStartTime = System.nanoTime();
+                        egg.setPositionXY(-3000, -3000);
+                        egg.render(gc);
+                        String audioPath = "bonus.mp3";
+                        AudioClip sound = new AudioClip(getClass().getResource(audioPath).toString());
+                         sound.play();
+                        }
+             }
+         }
+ 
+   
+    
+         /*Method to make the bird free fly for 6secs when the bird intersects with the rocket
+          * */
+        public void snooze() {
+            
+            for(int i=0; i<DEF.pipe_COUNT; i++) {
+                double birdTopY = blob.getPositionY();
+                double topPipeBottomY = topPipes.get(i).getPositionY() + DEF.pipe_HEIGHT;
+        
+               
+                if (birdTopY <= topPipeBottomY) {
+                    blob.setPositionXY(DEF.pipe_WIDTH,topPipeBottomY );
+                }
+        
+                blob.setVelocity(0, DEF.BLOB_FLY_VEL); 
+                blob.setImage(DEF.IMAGE.get("blobf"));
+                blob.render(gc); 
+                long currentTime = System.nanoTime();
+                long snoozeDuration = (currentTime - snoozeStartTime) / 1_000_000_000; 
+                long remainingTime = Math.max(0, 6 - snoozeDuration); 
+                String snoozeText = "Snooze: " + remainingTime + "s";
+                gc.setFill(Color.WHITE);
+                gc.setFont(Font.font("Time New Roman", FontWeight.BOLD, 20));
+                gc.fillText(snoozeText, 20, 60);
+                
+                //extra second so it doesnt die immediately when in the middle of an intersection 
+                if (snoozeDuration >= 8) {
+                    snoozecheck = false; 
+                    blob.setImage(DEF.IMAGE.get("blob1"));
+                    
+                }
+            }
+          
+        }
+    
+         public void gameOver () {
+                CLICKED=false;
+                Text gameoverText = new Text("        Game Over! \n You are lost in space!");
+                gameoverText.setFont(Font.font("Times New Roman", FontWeight.EXTRA_BOLD, 20));
+                gameoverText.setFill(Color.RED);
+
+                // Center the text in the scene
+                double textX = (DEF.SCENE_WIDTH - gameoverText.getBoundsInLocal().getWidth()) / 2;
+                double textY = (DEF.SCENE_HEIGHT - gameoverText.getBoundsInLocal().getHeight()) / 2;
+
+                gameoverText.setLayoutX(textX);
+                gameoverText.setLayoutY(textY);
+
+                // Add the "Game Over" text to the existing gameScene
+                gameScene.getChildren().add(gameoverText);
+                
+                //resets score
+                score = 0;
+                scoreText.setText("Score: " + score);
+                
+                //resets lives
+                lives= 3;
+                livesText.setText("Life: " + lives);
+                
+                intersectCheck = false;
+                GAME_OVER = true;
+    
+         }
     
 
-	     private void showHitEffect() {
-	        ParallelTransition parallelTransition = new ParallelTransition();
-	        FadeTransition fadeTransition = new FadeTransition(Duration.seconds(DEF.TRANSITION_TIME), gameScene);
-	        fadeTransition.setToValue(0);
-	        fadeTransition.setCycleCount(DEF.TRANSITION_CYCLE);
-	        fadeTransition.setAutoReverse(true);
-	        parallelTransition.getChildren().add(fadeTransition);
-	        parallelTransition.play();
-	     }
-    	 
+         private void showHitEffect() {
+            ParallelTransition parallelTransition = new ParallelTransition();
+            FadeTransition fadeTransition = new FadeTransition(Duration.seconds(DEF.TRANSITION_TIME), gameScene);
+            fadeTransition.setToValue(0);
+            fadeTransition.setCycleCount(DEF.TRANSITION_CYCLE);
+            fadeTransition.setAutoReverse(true);
+            parallelTransition.getChildren().add(fadeTransition);
+            parallelTransition.play();
+         }
+         
     } // End of MyTimer class
+    
+ // End of MyTimer class
+    
+    /*Method to make the bird free fly for 6secs when the bird intersects with the rocket
+     * */
+   public void snooze() {
+       
+       for(int i=0; i<DEF.pipe_COUNT; i++) {
+           double birdTopY = blob.getPositionY();
+           double topPipeBottomY = topPipes.get(i).getPositionY() + DEF.pipe_HEIGHT;
+   
+          
+           if (birdTopY <= topPipeBottomY) {
+               blob.setPositionXY(DEF.pipe_WIDTH,topPipeBottomY );
+           }
+   
+           blob.setVelocity(0, DEF.BLOB_FLY_VEL); 
+           blob.setImage(DEF.IMAGE.get("blobf"));
+           blob.render(gc); 
+           long currentTime = System.nanoTime();
+           long snoozeDuration = (currentTime - snoozeStartTime) / 1_000_000_000; 
+           long remainingTime = Math.max(0, 6 - snoozeDuration); 
+           String snoozeText = "Snooze: " + remainingTime + "s";
+           gc.setFill(Color.WHITE);
+           gc.setFont(Font.font("Time New Roman", FontWeight.BOLD, 20));
+           gc.fillText(snoozeText, 20, 60);
+           
+           //extra second so it doesnt die immediately when in the middle of an intersection 
+           if (snoozeDuration >= 7) {
+               snoozecheck = false; 
+               blob.setImage(DEF.IMAGE.get("blob1"));
+               
+           }
+       }
+     
+   }
+         
+       
+   /*Method to check collision with the white egg and add 3 points to the score
+    * */
+   public void checkegg() {
+       for (Sprite egg: eggs) {
+           if(blob.intersectsSprite(egg)) {
+               
+               
+           egg.setPositionXY(-3000, -3000); 
+           egg.render(gc);
+           score = score +3;
+           String audioPath = "bonus.mp3";
+           AudioClip sound = new AudioClip(getClass().getResource(audioPath).toString());
+           sound.play();
+           }
+       } 
+   }
+   
+   //*Method to check collision with the pig and the eggs and removing points if collision happens 
+   public void pigCollectsEgg() {
+           for(Sprite pig : pigs) {
+               for (Sprite egg : goldeggs) {
+                  if (pig.intersectsSprite(egg)) {
+                      egg.setPositionXY(-3000, -3000);
+                      
+                      egg.render(gc);
+                      score= score -3;
+                  }
+               }
+              }
+       
+      
+           for(Sprite pig : pigs) {
+               for (Sprite egg : eggs) {
+                  if (pig.intersectsSprite(egg)) {
+                      egg.setPositionXY(-3000, -3000);
+                      
+                      egg.render(gc);
+                      score= score -3;
+                  }
+              }
+           }
+   }
+
+    
+// Helper Methods for JUnit TestingS
+    
+    public int getScore() {
+        return score;
+    }
+    public int getLives() {
+        return lives;
+    }
+    public boolean isGameOver() {
+        return GAME_OVER;
+    }
+
+//    public void checkCollision() {
+//        // TODO Auto-generated method stub
+//        
+//    }
+
+  
+    
 
 } // End of AngryFlappyBird Class
 

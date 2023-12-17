@@ -21,8 +21,8 @@ public class Defines {
     // coefficients related to the blob
     final int BLOB_WIDTH = 70;
     final int BLOB_HEIGHT = 70;
-    final int BLOB_POS_X = 70;
-    final int BLOB_POS_Y = 200;
+    public final static int BLOB_POS_X = 70;
+    public final static int BLOB_POS_Y = 200;
     final int BLOB_DROP_TIME = 300000000;  	// the elapsed time threshold before the blob starts dropping
     final int BLOB_DROP_VEL = 50;    		// the blob drop velocity    //change to 50 from 300
     final int BLOB_FLY_VEL = -40;
@@ -62,14 +62,14 @@ public class Defines {
    final int pig_POS_Y = 200;
    final int pig_DROP_TIME = 00000000;  
    final int pig_COUNT = 5;
-   double pig_DROP_VEL = 0.24;    		
+   double pig_DROP_VEL = 0.165;    		
    final int pig_IMG_LEN = 1;
  
 
    
    
     // coefficients related to time
-    int SCENE_SHIFT_TIME = 5;
+    public static int SCENE_SHIFT_TIME = 5;
     final double SCENE_SHIFT_INCR = -0.4;
     final double NANOSEC_TO_SEC = 1.0 / 1000000000.0;
     final double TRANSITION_TIME = 0.1;
@@ -106,7 +106,7 @@ public class Defines {
     Button easyButton;
     Button mediumButton;
     Button hardButton;
-    Button playagain;
+//    Button playagain;
         
     // constructor
 	Defines() {
@@ -159,13 +159,13 @@ public class Defines {
     	}
 		
 		// initialize scene nodes
-		startButton = new Button("Go!");
+		startButton = new Button("Start Game");
 		
 		//initialize difficulty nodes
 		easyButton = new Button("Easy");
 		mediumButton = new Button("Medium");
 		hardButton = new Button("Hard");
-		playagain = new Button ("Play again?");
+	
 	}
 	
 	public String pathImage(String filepath) {

@@ -36,16 +36,16 @@ public class Sprite {
 }
     
 
-     void setPositionXY(double positionX, double positionY) {
+     public void setPositionXY(double positionX, double positionY) {
         this.positionX = positionX;
         this.positionY = positionY;
     
      }
-    double getPositionX() {
+    public double getPositionX() {
        return positionX;
     }
 
-    double getPositionY() {
+    public double getPositionY() {
         return positionY;
     }
 
